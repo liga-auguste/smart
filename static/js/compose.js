@@ -8,11 +8,28 @@ const TYPE_LABELS = {
 };
 
 const textarea     = document.getElementById('content');
+textarea.focus();
 const typeField    = document.getElementById('card-type-field');
 const typeLabel    = document.getElementById('type-label');
 const saveConfirm  = document.getElementById('save-confirm');
 const form         = document.getElementById('compose-form');
+const actions      = document.querySelector('.compose-actions');
 
+const SAVE_MESSAGES = [
+  'gespeichert. wow.',
+  'da ist es.',
+  'okay.',
+  'noted.',
+  'für die nachwelt.',
+  'ins leere geschrien.',
+  'niemand wird\'s lesen.',
+  'gut für dich.',
+  'fein gemacht.',
+  'irgendwo zwischen ernst und egal.',
+  'wer weiß wozu.',
+];
+
+let saveMessageIndex = 0;
 let debounceTimer = null;
 
 function detectTypeClientside(content) {
@@ -29,7 +46,7 @@ function updateTypeLabel(cardType) {
 textarea.addEventListener('input', () => {
   const content = textarea.value;
 
-  // Immediate client-side type detection
+  actions.classList.toggle('visible', content.trim().length > 0);
   updateTypeLabel(detectTypeClientside(content));
 
   // Debounced API call
@@ -61,11 +78,30 @@ async function analyseViaAPI(content) {
   }
 }
 
-form.addEventListener('submit', () => {
-  setTimeout(() => {
-    saveConfirm.classList.add('visible');
-    setTimeout(() => saveConfirm.classList.remove('visible'), 2000);
-  }, 50);
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(form);
+
+  try {
+    const res = await fetch('/', {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken'),
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+      body: formData,
+    });
+
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.redirect) {
+      window.location.href = data.redirect;
+      return;
+    }
+  } catch (e) {
+    // still
+  }
 });
 
 function getCookie(name) {

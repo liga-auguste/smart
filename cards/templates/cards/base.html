@@ -4,26 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}smart{% endblock %}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/base.css' %}">
   <link rel="stylesheet" href="{% static 'css/themes.css' %}">
+  
+  <link rel="icon" type="image/x-icon" href="{% static 'icons/favicon.ico' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'icons/favicon-32x32.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'icons/favicon-16x16.png' %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'icons/apple-touch-icon.png' %}">
 </head>
 <body>
   <nav class="nav">
     {% if user.is_authenticated %}
-      <a href="{% url 'compose' %}" class="nav-link">compose</a>
-      <a href="{% url 'list' %}" class="nav-link">cards</a>
+      {% if request.resolver_match.url_name == 'list' %}
+        {% if 'alle' in request.GET %}
+          <a href="{% url 'list' %}" class="nav-link">karten</a>
+        {% else %}
+          <a href="{% url 'list' %}?alle" class="nav-link">karten</a>
+        {% endif %}
+      {% else %}
+        <a href="{% url 'list' %}" class="nav-link">karten</a>
+      {% endif %}
+      <a href="{% url 'compose' %}" class="nav-link">neu</a>
       <a href="{% url 'logout' %}" class="nav-link nav-logout">raus</a>
     {% endif %}
+    <button class="theme-toggle" id="theme-toggle" title="theme wechseln">◑</button>
   </nav>
 
-  <main class="main">
+  <main class="main {% block main_class %}{% endblock %}">
     {% block content %}{% endblock %}
   </main>
 
+  <div id="theme-label" class="theme-label"></div>
   <script src="{% static 'js/theme.js' %}"></script>
   {% block scripts %}{% endblock %}
 </body>

@@ -32,9 +32,10 @@ class Card(UserOwnedModel):
     source = models.CharField(max_length=500, blank=True)
     meta = models.JSONField(default=dict, blank=True)
     areas = models.ManyToManyField(Area, blank=True)
+    order = models.PositiveIntegerField(default=0)
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['order', '-created_at']
 
     def __str__(self):
         return self.content[:60]

@@ -1,13 +1,13 @@
 /* === THEMES === */
 
 [data-theme="nacht"] {
-  --bg: #0d0d0d;
-  --bg-card: #141414;
+  --bg: #111111;
+  --bg-card: #1a1a1a;
   --fg: #e8e4dc;
   --fg-muted: #6b6660;
   --accent: #c8b89a;
-  --border: #222;
-  --input-bg: #111;
+  --border: #2a2a2a;
+  --input-bg: #161616;
 }
 
 [data-theme="tageslicht"] {
@@ -21,11 +21,81 @@
 }
 
 [data-theme="farbe"] {
-  --bg: #1a1025;
-  --bg-card: #211530;
-  --fg: #f0e8ff;
-  --fg-muted: #7a6a90;
-  --accent: #c084fc;
-  --border: #2d1f40;
-  --input-bg: #18102a;
+  --bg: #100818;
+  --bg-card: #180c28;
+  --fg: #f5a800;
+  --fg-muted: #8a6020;
+  --accent: #b040f8;
+  --border: #201038;
+  --input-bg: #0c0614;
+}
+
+[data-theme="nebel"] {
+  --bg: #101828;
+  --bg-card: #182038;
+  --fg: #90c0e8;
+  --fg-muted: #4870a0;
+  --accent: #5090f0;
+  --border: #1c2a40;
+  --input-bg: #0c1420;
+}
+
+[data-theme="sand"] {
+  --bg: #201808;
+  --bg-card: #281e0c;
+  --fg: #e8c860;
+  --fg-muted: #907040;
+  --accent: #f0a020;
+  --border: #302010;
+  --input-bg: #181206;
+}
+
+[data-theme="wald"] {
+  --bg: #080f0a;
+  --bg-card: #0c1410;
+  --fg: #8a9e6a;
+  --fg-muted: #4a6040;
+  --accent: #6a8c3a;
+  --border: #182818;
+  --input-bg: #081210;
+}
+
+[data-theme="rost"] {
+  --bg: #201008;
+  --bg-card: #281408;
+  --fg: #e89060;
+  --fg-muted: #905040;
+  --accent: #f04820;
+  --border: #301810;
+  --input-bg: #180c06;
+}
+
+[data-theme="grau"] {
+  --bg: #0e1014;
+  --bg-card: #161820;
+  --fg: #6878a0;
+  --fg-muted: #383e50;
+  --accent: #5060a0;
+  --border: #1c2030;
+  --input-bg: #0a0c10;
+}
+
+[data-theme="bunt"] {
+  --bg: #141210;
+  --bg-card: #1e1a16;
+  --fg: #907860;
+  --fg-muted: #504540;
+  --accent: #706050;
+  --border: #221e1a;
+  --input-bg: #100e0c;
+}
+
+[data-theme="karpaten"] {
+  --bg: #282a36;
+  --bg-card: #44475a;
+  --fg: #f8f8f2;
+  --fg-muted: #6272a4;
+  --accent: #bd93f9;
+  --border: #44475a;
+  --input-bg: #21222c;
 }

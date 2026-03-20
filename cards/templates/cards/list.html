@@ -1,18 +1,30 @@
 {% extends 'cards/base.html' %}
+{% load card_tags %}
 
 {% block title %}cards — smart{% endblock %}
 
+{% block main_class %}main--cards{% endblock %}
+
 {% block content %}
-<div class="card-list">
+
+<div class="card-list{% if alle %} card-list--alle{% endif %}">
   {% if not cards %}
     <div class="empty-state">
-      <span class="cursor">_</span>
+      <a href="{% url 'compose' %}" class="cursor">_</a>
     </div>
   {% else %}
     {% for card in cards %}
-    <article class="card" data-type="{{ card.card_type }}">
-      <div class="card-type">{{ card.get_card_type_display|lower }}</div>
-      <div class="card-content">{{ card.content }}</div>
+    <article class="card" data-type="{{ card.card_type }}" data-id="{{ card.id }}">
+      <div class="card-display">
+        {% if card.card_type != 'note' %}
+        <div class="card-type">{% if card.card_type == 'quote' %}jemand kluges hat gesagt{% elif card.card_type == 'book' %}papier mit wörtern{% elif card.card_type == 'link' %}internet-fund{% elif card.card_type == 'fact' %}unnötiges wissen{% endif %}</div>
+        {% endif %}
+        <div class="card-headline">{{ card.content|headline }}</div>
+        {% with rest=card.content|body %}{% if rest %}
+        <div class="card-body">{{ rest|linebreaksbr }}</div>
+        {% endif %}{% endwith %}
+      </div>
+      <div class="card-editor" contenteditable="false">{{ card.content }}</div>
       <time class="card-time" datetime="{{ card.created_at|date:'c' }}">
         {{ card.created_at|date:'d.m.Y' }}
       </time>
@@ -20,4 +32,9 @@
     {% endfor %}
   {% endif %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+{% load static %}
+<script src="{% static 'js/cards.js' %}"></script>
 {% endblock %}
