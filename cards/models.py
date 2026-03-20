@@ -19,18 +19,7 @@ class Area(UserOwnedModel):
 
 
 class Card(UserOwnedModel):
-    TYPE_CHOICES = [
-        ('note', 'Note'),
-        ('quote', 'Quote'),
-        ('book', 'Book'),
-        ('link', 'Link'),
-        ('fact', 'Fact'),
-    ]
-
     content = models.TextField()
-    card_type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='note')
-    source = models.CharField(max_length=500, blank=True)
-    meta = models.JSONField(default=dict, blank=True)
     areas = models.ManyToManyField(Area, blank=True)
     order = models.PositiveIntegerField(default=0)
 

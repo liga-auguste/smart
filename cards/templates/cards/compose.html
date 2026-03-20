@@ -7,9 +7,6 @@
 <div class="compose-wrap">
   <form method="post" class="compose-form" id="compose-form">
     {% csrf_token %}
-    <input type="hidden" name="card_type" id="card-type-field" value="note">
-
-    <div class="type-label" id="type-label"></div>
 
     <textarea
       name="content"

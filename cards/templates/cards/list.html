@@ -16,9 +16,6 @@
     {% for card in cards %}
     <article class="card" data-type="{{ card.card_type }}" data-id="{{ card.id }}">
       <div class="card-display">
-        {% if card.card_type != 'note' %}
-        <div class="card-type">{% if card.card_type == 'quote' %}jemand kluges hat gesagt{% elif card.card_type == 'book' %}papier mit wörtern{% elif card.card_type == 'link' %}internet-fund{% elif card.card_type == 'fact' %}unnötiges wissen{% endif %}</div>
-        {% endif %}
         <div class="card-headline">{{ card.content|headline }}</div>
         {% with rest=card.content|body %}{% if rest %}
         <div class="card-body">{{ rest|linebreaksbr }}</div>
