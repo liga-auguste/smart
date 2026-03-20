@@ -1,0 +1,31 @@
+/* === THEMES === */
+
+[data-theme="nacht"] {
+  --bg: #0d0d0d;
+  --bg-card: #141414;
+  --fg: #e8e4dc;
+  --fg-muted: #6b6660;
+  --accent: #c8b89a;
+  --border: #222;
+  --input-bg: #111;
+}
+
+[data-theme="tageslicht"] {
+  --bg: #f5f2ed;
+  --bg-card: #fff;
+  --fg: #1a1714;
+  --fg-muted: #8a847c;
+  --accent: #6b4f3a;
+  --border: #e0dbd4;
+  --input-bg: #fff;
+}
+
+[data-theme="farbe"] {
+  --bg: #1a1025;
+  --bg-card: #211530;
+  --fg: #f0e8ff;
+  --fg-muted: #7a6a90;
+  --accent: #c084fc;
+  --border: #2d1f40;
+  --input-bg: #18102a;
+}

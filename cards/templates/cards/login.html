@@ -1,0 +1,17 @@
+{% extends 'cards/base.html' %}
+
+{% block title %}login — smart{% endblock %}
+
+{% block content %}
+<div class="login-wrap">
+  <form method="post" class="login-form">
+    {% csrf_token %}
+    <input type="text" name="username" placeholder="name" autofocus class="input">
+    <input type="password" name="password" placeholder="wort" class="input">
+    <button type="submit" class="btn-save">rein</button>
+    {% if form.errors %}
+      <div class="login-error">falsch.</div>
+    {% endif %}
+  </form>
+</div>
+{% endblock %}

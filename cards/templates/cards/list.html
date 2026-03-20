@@ -1,0 +1,23 @@
+{% extends 'cards/base.html' %}
+
+{% block title %}cards — smart{% endblock %}
+
+{% block content %}
+<div class="card-list">
+  {% if not cards %}
+    <div class="empty-state">
+      <span class="cursor">_</span>
+    </div>
+  {% else %}
+    {% for card in cards %}
+    <article class="card" data-type="{{ card.card_type }}">
+      <div class="card-type">{{ card.get_card_type_display|lower }}</div>
+      <div class="card-content">{{ card.content }}</div>
+      <time class="card-time" datetime="{{ card.created_at|date:'c' }}">
+        {{ card.created_at|date:'d.m.Y' }}
+      </time>
+    </article>
+    {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

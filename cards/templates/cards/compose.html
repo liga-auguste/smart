@@ -1,0 +1,33 @@
+{% extends 'cards/base.html' %}
+{% load static %}
+
+{% block title %}compose — smart{% endblock %}
+
+{% block content %}
+<div class="compose-wrap">
+  <form method="post" class="compose-form" id="compose-form">
+    {% csrf_token %}
+    <input type="hidden" name="card_type" id="card-type-field" value="note">
+
+    <div class="type-label" id="type-label"></div>
+
+    <textarea
+      name="content"
+      id="content"
+      class="compose-textarea"
+      placeholder=""
+      autofocus
+    ></textarea>
+
+    <div class="compose-actions">
+      <button type="submit" class="btn-save">speichern</button>
+    </div>
+  </form>
+
+  <div class="save-confirm" id="save-confirm">gespeichert. wow.</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/compose.js' %}"></script>
+{% endblock %}
