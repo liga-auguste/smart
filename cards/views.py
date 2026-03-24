@@ -10,13 +10,13 @@ from .models import Card
 @login_required
 def compose(request):
     if request.method == 'POST':
-        content = request.POST.get('content', '').strip()
+        headline = request.POST.get('headline', '').strip()
+        body = request.POST.get('body', '').strip()
+        content = (headline + '\n' + body) if body else headline
 
         if content:
             Card.objects.create(user=request.user, content=content)
 
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return JsonResponse({'ok': True, 'redirect': '/cards/'})
         return redirect('list')
 
     return render(request, 'cards/compose.html')
@@ -24,9 +24,15 @@ def compose(request):
 
 @login_required
 def card_list(request):
-    cards = Card.objects.filter(user=request.user).order_by('-created_at')
+    q = request.GET.get('q', '').strip()
     alle = 'alle' in request.GET
-    return render(request, 'cards/list.html', {'cards': cards, 'alle': alle})
+    cards = Card.objects.filter(user=request.user)
+    if q:
+        cards = cards.filter(content__icontains=q).order_by('-created_at')
+        alle = True
+    else:
+        cards = cards.order_by('-created_at')
+    return render(request, 'cards/list.html', {'cards': cards, 'alle': alle, 'q': q})
 
 
 @login_required

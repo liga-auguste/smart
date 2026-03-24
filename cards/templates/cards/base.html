@@ -12,6 +12,10 @@
   <link rel="icon" type="image/png" sizes="32x32" href="{% static 'icons/favicon-32x32.png' %}">
   <link rel="icon" type="image/png" sizes="16x16" href="{% static 'icons/favicon-16x16.png' %}">
   <link rel="apple-touch-icon" sizes="180x180" href="{% static 'icons/apple-touch-icon.png' %}">
+  <link rel="manifest" href="{% static 'manifest.json' %}">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
   <nav class="nav">
@@ -26,7 +30,13 @@
         <a href="{% url 'list' %}" class="nav-link">karten</a>
       {% endif %}
       <a href="{% url 'compose' %}" class="nav-link">neu</a>
-      <a href="{% url 'logout' %}" class="nav-link nav-logout">raus</a>
+      <span class="nav-spacer"></span>
+      {% block nav_extra %}{% endblock %}
+
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="nav-link nav-logout">raus</button>
+      </form>
     {% endif %}
     <button class="theme-toggle" id="theme-toggle" title="theme wechseln">◑</button>
   </nav>

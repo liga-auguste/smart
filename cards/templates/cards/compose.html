@@ -8,12 +8,22 @@
   <form method="post" class="compose-form" id="compose-form">
     {% csrf_token %}
 
-    <textarea
-      name="content"
-      id="content"
-      class="compose-textarea"
-      placeholder=""
+    <input
+      type="text"
+      name="headline"
+      id="compose-headline"
+      class="compose-headline"
+      placeholder="überschrift"
+      autocomplete="off"
+      spellcheck="false"
       autofocus
+    >
+    <textarea
+      name="body"
+      id="compose-body"
+      class="compose-body"
+      placeholder="text"
+      spellcheck="false"
     ></textarea>
 
     <div class="compose-actions">

@@ -1,0 +1,10 @@
+{% extends 'cards/base.html' %}
+
+{% block title %}raus — smart{% endblock %}
+
+{% block content %}
+<div class="login-wrap">
+  <p class="logged-out-msg">raus.</p>
+  <a href="{% url 'login' %}" class="nav-link">wieder rein</a>
+</div>
+{% endblock %}
