@@ -265,7 +265,6 @@ document.querySelectorAll('.card').forEach(card => {
   let originalHeadline = '';
   let originalBody = '';
   let pointerStart = null;
-  let metaTimer = null;
 
   card.addEventListener('pointerdown', (e) => {
     pointerStart = { x: e.clientX, y: e.clientY };
@@ -289,21 +288,7 @@ document.querySelectorAll('.card').forEach(card => {
       enterEdit();
     } else {
       lastTap = now;
-      if (isSingleView) {
-        const isVisible = document.body.classList.contains('meta-active');
-        clearTimeout(metaTimer);
-        if (isVisible) {
-          card.classList.remove('meta-visible');
-          document.body.classList.remove('meta-active');
-        } else {
-          card.classList.add('meta-visible');
-          document.body.classList.add('meta-active');
-          metaTimer = setTimeout(() => {
-            card.classList.remove('meta-visible');
-            document.body.classList.remove('meta-active');
-          }, 5000);
-        }
-      } else {
+      if (!isSingleView) {
         window.location.href = `/cards/#card-${card.dataset.id}`;
       }
     }

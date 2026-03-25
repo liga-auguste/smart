@@ -11,16 +11,8 @@ class UserOwnedModel(models.Model):
         abstract = True
 
 
-class Area(UserOwnedModel):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
-
 class Card(UserOwnedModel):
     content = models.TextField()
-    areas = models.ManyToManyField(Area, blank=True)
     order = models.PositiveIntegerField(default=0)
 
     class Meta:

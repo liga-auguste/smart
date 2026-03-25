@@ -221,10 +221,6 @@ body {
   transition: opacity 0.3s;
 }
 
-.single-view.meta-active .nav {
-  opacity: 1;
-  pointer-events: auto;
-}
 
 .single-view .card {
   height: 100dvh;
@@ -526,14 +522,6 @@ body {
   pointer-events: none;
 }
 
-.card-type {
-  font-size: 0.65rem;
-  color: var(--fg-muted);
-  letter-spacing: 0.12em;
-  margin-bottom: 0.6rem;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
 
 .card-headline {
   font-family: 'DM Serif Display', serif;
@@ -557,13 +545,6 @@ body {
   color: var(--fg-muted);
   font-style: normal;
   letter-spacing: 0.05em;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.card.meta-visible .card-time,
-.card.meta-visible .card-type {
-  opacity: 1;
 }
 
 

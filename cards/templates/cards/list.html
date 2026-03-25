@@ -36,7 +36,7 @@
     </div>
   {% else %}
     {% for card in cards %}
-    <article class="card" id="card-{{ card.id }}" data-type="{{ card.card_type }}" data-id="{{ card.id }}">
+    <article class="card" id="card-{{ card.id }}" data-id="{{ card.id }}">
       <div class="card-display">
         <div class="card-headline">{{ card.content|headline }}</div>
         {% with rest=card.content|body %}{% if rest %}
