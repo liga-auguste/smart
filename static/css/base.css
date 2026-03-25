@@ -82,6 +82,7 @@ body {
 
 .nav {
   display: flex;
+  align-items: center;
   gap: 1.5rem;
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid var(--border);
@@ -102,6 +103,38 @@ body {
 
 .nav-link:hover {
   color: var(--fg);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--fg-muted);
+  transition: color 0.15s;
+}
+
+.nav-logo:hover {
+  color: var(--fg);
+}
+
+.nav-logo-img {
+  height: 1.7rem;
+  width: auto;
+  display: block;
+  filter: invert(0) opacity(0.6);
+  transition: filter 0.15s;
+}
+
+.nav-logo:hover .nav-logo-img {
+  filter: invert(0) opacity(1);
+}
+
+[data-theme="tageslicht"] .nav-logo-img {
+  filter: invert(1) opacity(0.6);
+}
+
+[data-theme="tageslicht"] .nav-logo:hover .nav-logo-img {
+  filter: invert(1) opacity(1);
 }
 
 .nav-spacer {
@@ -493,6 +526,18 @@ body {
   pointer-events: auto;
 }
 
+@media (hover: hover) {
+  .card-swipe-wrapper:hover .card-delete-btn {
+    pointer-events: auto;
+    opacity: 1;
+  }
+
+  .card-delete-btn {
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+}
+
 
 /* dragging state */
 .card-list--alle .card.dragging {
@@ -544,12 +589,7 @@ body {
 }
 
 .card-time {
-  display: block;
-  margin-top: 1.25rem;
-  font-size: 0.65rem;
-  color: var(--fg-muted);
-  font-style: normal;
-  letter-spacing: 0.05em;
+  display: none;
 }
 
 

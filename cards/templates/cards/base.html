@@ -22,12 +22,12 @@
     {% if user.is_authenticated %}
       {% if request.resolver_match.url_name == 'list' %}
         {% if 'alle' in request.GET %}
-          <a href="{% url 'list' %}" class="nav-link">karten</a>
+          <a href="{% url 'list' %}" class="nav-logo"><img src="{% static 'icons/smart_logo.svg' %}" alt="smart" class="nav-logo-img"></a>
         {% else %}
-          <a href="{% url 'list' %}?alle" class="nav-link">karten</a>
+          <a href="{% url 'list' %}?alle" class="nav-logo"><img src="{% static 'icons/smart_logo.png' %}" alt="smart" class="nav-logo-img"></a>
         {% endif %}
       {% else %}
-        <a href="{% url 'list' %}" class="nav-link">karten</a>
+        <a href="{% url 'list' %}" class="nav-logo"><img src="{% static 'icons/smart_logo.svg' %}" alt="smart" class="nav-logo-img"></a>
       {% endif %}
       <a href="{% url 'compose' %}" class="nav-link">neu</a>
       <span class="nav-spacer"></span>

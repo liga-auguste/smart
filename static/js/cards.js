@@ -291,8 +291,12 @@ document.querySelectorAll('.card').forEach(card => {
       lastTap = now;
       if (isSingleView) {
         clearTimeout(navTimer);
-        document.body.classList.add('nav-visible');
-        navTimer = setTimeout(() => document.body.classList.remove('nav-visible'), 3000);
+        if (document.body.classList.contains('nav-visible')) {
+          document.body.classList.remove('nav-visible');
+        } else {
+          document.body.classList.add('nav-visible');
+          navTimer = setTimeout(() => document.body.classList.remove('nav-visible'), 3000);
+        }
       } else {
         window.location.href = `/cards/#card-${card.dataset.id}`;
       }
