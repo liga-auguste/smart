@@ -265,6 +265,7 @@ document.querySelectorAll('.card').forEach(card => {
   let originalHeadline = '';
   let originalBody = '';
   let pointerStart = null;
+  let navTimer = null;
 
   card.addEventListener('pointerdown', (e) => {
     pointerStart = { x: e.clientX, y: e.clientY };
@@ -288,7 +289,11 @@ document.querySelectorAll('.card').forEach(card => {
       enterEdit();
     } else {
       lastTap = now;
-      if (!isSingleView) {
+      if (isSingleView) {
+        clearTimeout(navTimer);
+        document.body.classList.add('nav-visible');
+        navTimer = setTimeout(() => document.body.classList.remove('nav-visible'), 3000);
+      } else {
         window.location.href = `/cards/#card-${card.dataset.id}`;
       }
     }

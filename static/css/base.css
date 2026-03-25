@@ -222,6 +222,11 @@ body {
 }
 
 
+.single-view.nav-visible .nav {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .single-view .card {
   height: 100dvh;
   display: flex;

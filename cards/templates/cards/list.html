@@ -32,7 +32,7 @@
 <div class="card-list{% if alle %} card-list--alle{% endif %}">
   {% if not cards %}
     <div class="empty-state">
-      <a href="{% url 'compose' %}" class="cursor">_</a>
+      <a href="{% url 'compose' %}" class="cursor">nichts hier. noch nicht.</a>
     </div>
   {% else %}
     {% for card in cards %}
