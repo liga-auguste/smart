@@ -40,7 +40,7 @@
       <div class="card-display">
         <div class="card-headline">{{ card.content|headline }}</div>
         {% with rest=card.content|body %}{% if rest %}
-        <div class="card-body">{{ rest|linebreaksbr }}</div>
+        <div class="card-body">{{ rest }}</div>
         {% endif %}{% endwith %}
       </div>
 <time class="card-time" datetime="{{ card.created_at|date:'c' }}">

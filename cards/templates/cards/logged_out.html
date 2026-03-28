@@ -1,9 +1,13 @@
 {% extends 'cards/base.html' %}
+{% load static %}
 
 {% block title %}raus — smart{% endblock %}
 
+{% block main_class %}main--login{% endblock %}
+
 {% block content %}
 <div class="login-wrap">
+  <span class="login-logo" aria-label="smart shit"></span>
   <p class="logged-out-msg">raus.</p>
   <a href="{% url 'login' %}" class="nav-link">wieder rein</a>
 </div>

@@ -43,6 +43,7 @@ if (cardList) {
   let downY = 0;
   let downPointerId = null;
   let openCard = null; // card currently swiped open showing delete btn
+  let longPressTimer = null;
 
   // Wrap each card and add delete button to wrapper
   cardList.querySelectorAll('.card').forEach(card => {
@@ -126,7 +127,18 @@ if (cardList) {
       downPointerId = e.pointerId;
       mode = null;
 
-      // mouse drag starts on vertical move (see pointermove)
+      if (e.pointerType !== 'mouse') {
+        longPressTimer = setTimeout(() => {
+          longPressTimer = null;
+          if (!downCard) return;
+          if (openCard) snapClosed(openCard);
+          mode = 'drag';
+          isDragging = true;
+          if (navigator.vibrate) navigator.vibrate(30);
+          downCard.setPointerCapture(downPointerId);
+          startDrag(downCard, { clientX: downX, clientY: downY });
+        }, 400);
+      }
     });
   });
 
@@ -145,19 +157,16 @@ if (cardList) {
           startDrag(downCard, { clientX: downX, clientY: downY });
         }
       } else {
+        // Touch: bei Bewegung long press abbrechen
+        if (adx > 8 || ady > 8) {
+          if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+        }
         if (adx > 10 && adx > ady * 1.5 && dx < 0) {
           // links swipen → löschen
           if (openCard && openCard !== downCard) snapClosed(openCard);
           mode = 'swipe';
           downCard.setPointerCapture(downPointerId);
           downCard.classList.add('swiping');
-        } else if (adx > 10 && adx > ady * 1.5 && dx > 0) {
-          // rechts swipen → drag starten
-          if (openCard) snapClosed(openCard);
-          mode = 'drag';
-          isDragging = true;
-          downCard.setPointerCapture(downPointerId);
-          startDrag(downCard, { clientX: downX, clientY: downY, pointerId: downPointerId });
         } else if (ady > 8) {
           downCard = null;
         }
@@ -214,6 +223,8 @@ if (cardList) {
   }
 
   function onUp(e) {
+    if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+
     if (mode === 'swipe' && downCard) {
       const dx = e.clientX - downX;
       if (Math.abs(dx) > downCard.offsetWidth * 0.35) {
@@ -317,7 +328,7 @@ document.querySelectorAll('.card').forEach(card => {
     }
 
     originalHeadline = headlineEl.textContent;
-    originalBody = bodyEl.textContent;
+    originalBody = bodyEl.innerText;
 
     card.classList.add('editing');
     headlineEl.contentEditable = 'true';
@@ -330,6 +341,14 @@ document.querySelectorAll('.card').forEach(card => {
     headlineEl.addEventListener('blur', scheduleExit);
     bodyEl.addEventListener('blur', scheduleExit);
     bodyEl.addEventListener('keydown', onBodyKeydown);
+
+    const saveBtn = document.createElement('button');
+    saveBtn.type = 'button';
+    saveBtn.className = 'card-edit-save-btn';
+    saveBtn.textContent = 'speichern';
+    saveBtn.addEventListener('mousedown', (e) => e.preventDefault());
+    saveBtn.addEventListener('click', () => exitEdit(false));
+    display.appendChild(saveBtn);
   }
 
   function onHeadlineKeydown(e) {
@@ -365,6 +384,8 @@ document.querySelectorAll('.card').forEach(card => {
     const display = card.querySelector('.card-display');
     const headlineEl = display.querySelector('.card-headline');
     const bodyEl = display.querySelector('.card-body');
+    const saveBtn = display.querySelector('.card-edit-save-btn');
+    if (saveBtn) saveBtn.remove();
 
     card.classList.remove('editing');
     headlineEl.contentEditable = 'false';
@@ -383,7 +404,7 @@ document.querySelectorAll('.card').forEach(card => {
     }
 
     const headline = headlineEl.textContent.trim();
-    const body = bodyEl ? bodyEl.textContent.trim() : '';
+    const body = bodyEl ? bodyEl.innerText.trim() : '';
     const newContent = body ? headline + '\n' + body : headline;
     const oldContent = originalBody ? originalHeadline + '\n' + originalBody : originalHeadline;
 

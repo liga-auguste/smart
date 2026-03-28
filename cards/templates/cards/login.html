@@ -1,12 +1,16 @@
 {% extends 'cards/base.html' %}
+{% load static %}
 
 {% block title %}login — smart{% endblock %}
 
+{% block main_class %}main--login{% endblock %}
+
 {% block content %}
 <div class="login-wrap">
+  <span class="login-logo" aria-label="smart shit"></span>
   <form method="post" class="login-form">
     {% csrf_token %}
-    <input type="text" name="username" placeholder="name" autofocus class="input">
+    <input type="text" name="username" placeholder="name" autofocus autocapitalize="none" class="input">
     <input type="password" name="password" placeholder="wort" class="input">
     <button type="submit" class="btn-save">rein</button>
     {% if form.errors %}
