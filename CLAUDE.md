@@ -66,6 +66,7 @@ smart/
     ├── js/
     │   ├── cards.js
     │   ├── compose.js
+    │   ├── onboarding.js
     │   └── theme.js
     ├── icons/
     └── manifest.json
@@ -77,29 +78,38 @@ smart/
 
 ### Themes
 
-| Name | Beschreibung |
-|------|-------------|
-| `tageslicht` | Hell, warme Off-Whites |
-| `nacht` | Dunkel, fast schwarz — **Default** |
-| `farbe` | Anpassbar, fünf Farbfelder |
+10 Themes: `nacht` (Default), `tageslicht`, `farbe`, `nebel`, `sand`, `wald`, `rost`, `grau`, `bunt`, `karpaten`
 
 ### Compose
 
 - Zwei Felder: `headline` + `body` (textarea)
 - Nach dem Speichern: `"gespeichert. wow."` — erscheint kurz, faded weg
+- Body-Textarea: `min-height: 14rem` (Mobile), `20rem` (Desktop)
 
 ### Kartenansichten
 
 - **Single View** (`/cards/`): eine Karte pro Bildschirm, horizontal scrollbar, letzter Stand wird im localStorage gespeichert
 - **Listen-Ansicht** (`/cards/?alle`): alle Karten untereinander, mit Sort- und Delete-Modus
 
-### Navigation (Listen-Ansicht)
+### Navigation
 
+- In `base.html` definiert, für alle Views einheitlich
 - Logo: togglet zwischen Single View und Listen-Ansicht
 - `neu`: öffnet Compose
-- Suchicon: öffnet Suchleiste
-- `⋯`: Dropdown-Menü mit „sortieren" und „löschen"
-- `raus`: Logout
+- `◑`: Theme-Toggle (immer sichtbar)
+- `⋯`: Dropdown-Menü — Inhalt via `{% block nav_menu_items %}` pro Template erweiterbar
+  - Listen-Ansicht: suchen, sortieren (nur bei `?alle`), löschen (nur bei `?alle`), über, raus
+- `über`: öffnet Onboarding erneut
+
+### Onboarding
+
+- 3-Slide-Overlay, erscheint beim ersten Login (`localStorage: onboarding_seen`)
+- Slide 1: App-Manifesto; Slide 2: Logo + Caption; Slide 3: Theme-Karussell
+- Slide 3: Auto-Cycle durch alle 10 Themes (2,2s Intervall), „weiter →" erscheint nach vollem Durchlauf
+- Navigation: Links-Tippen = zurück, Rechts-Tippen = vor; auf Slide 3 = Theme vor/zurück
+- Swipe rechts auf Slide 3 verlässt das Karussell zurück zu Slide 2
+- Manuelles Tippen auf `◑` stoppt Auto-Cycle und zeigt „weiter →" sofort
+- Erneut aufrufbar via „über" im ⋯-Menü
 
 ---
 
@@ -112,6 +122,9 @@ smart/
 - [x] Mobile UX (pointer capture, touch-action, iOS-Zoom-Fix auf 1rem, `pointerdown` statt `click`)
 - [x] PWA-Manifest (manifest.json mit Icons, standalone display)
 - [x] Share Target (`share_target` in manifest.json, compose view liest `title`, `text`, `url` aus GET)
+- [x] Onboarding (3-Slide-Overlay, Theme-Karussell, direktionales Tippen, re-aufrufbar via „über")
+- [x] Nav-Refactor (⋯-Menü in base.html, `nav_menu_items`-Block, ◑ immer sichtbar)
+- [x] Root-URL `/` leitet zu `/cards/` weiter (kein versehentliches Landen auf Compose)
 
 ---
 
