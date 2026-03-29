@@ -30,9 +30,15 @@
 
 <div class="card-list{% if alle %} card-list--alle{% endif %}">
   {% if not cards %}
+    {% if q %}
     <div class="empty-state">
-      <a href="{% url 'compose' %}" class="cursor">nichts hier. noch nicht.</a>
+      <span class="empty-state-label">nichts gefunden.</span>
     </div>
+    {% else %}
+    <div class="empty-state">
+      <a href="{% url 'compose' %}" class="cursor" aria-label="neue karte"></a>
+    </div>
+    {% endif %}
   {% else %}
     {% for card in cards %}
     <article class="card" id="card-{{ card.id }}" data-id="{{ card.id }}">

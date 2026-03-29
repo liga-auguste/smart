@@ -761,15 +761,31 @@ body {
 /* === EMPTY STATE === */
 
 .empty-state {
-  padding: 4rem 0;
-  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
 }
 
 .cursor {
-  font-family: 'DM Mono', monospace;
-  font-size: 1.5rem;
-  color: var(--fg-muted);
+  display: inline-block;
+  width: 3px;
+  height: clamp(2.5rem, 8vw, 4rem);
+  background: var(--fg);
   text-decoration: none;
+  animation: blink 1s step-end infinite;
+}
+
+.empty-state-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
 }
 
 /* === LOGIN / LOGOUT === */

@@ -380,7 +380,7 @@ const navSearchToggle = document.getElementById('nav-search-toggle');
 const searchBar = document.getElementById('search-bar');
 const searchBarInput = document.getElementById('search-bar-input');
 
-if (navSearchToggle && searchBar) {
+if (searchBar) {
   const nav = document.querySelector('.nav');
   let searchBlurFromPointer = false;
 
@@ -435,7 +435,7 @@ if (navSearchToggle && searchBar) {
   });
 
   document.addEventListener('pointerdown', (e) => {
-    if (!searchBar.hidden && !searchBarInput.value && !searchBar.contains(e.target) && !navSearchToggle.contains(e.target)) {
+    if (!searchBar.hidden && !searchBarInput.value && !searchBar.contains(e.target) && !navSearchToggle?.contains(e.target)) {
       closeSearch();
     }
   });
