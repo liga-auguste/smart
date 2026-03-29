@@ -96,6 +96,7 @@
 
 html {
   font-size: 16px;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -115,12 +116,14 @@ body {
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  padding: 1.25rem 1.5rem;
+  padding: 0 1.5rem;
+  height: 60px;
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   background: var(--bg);
   z-index: 10;
+  flex-shrink: 0;
 }
 
 
@@ -150,8 +153,8 @@ body {
 
 .nav-logo-img {
   display: block;
-  width: 3.4rem;
-  height: 1.7rem;
+  width: 54px;
+  height: 27px;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: left center;
