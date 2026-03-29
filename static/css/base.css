@@ -181,6 +181,32 @@ body {
   flex: 1;
 }
 
+.nav-stapel {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+  letter-spacing: 0.04em;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-stapel:not(:empty) {
+  opacity: 1;
+}
+
+.nav-stapel--active {
+  color: var(--fg);
+  border-color: var(--fg);
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .theme-toggle {
   background: none;
   border: none;
@@ -312,6 +338,7 @@ body {
   pointer-events: auto;
 }
 
+
 .single-view .card {
   height: 100dvh;
   display: flex;
@@ -350,6 +377,10 @@ body {
   max-width: 500px;
   margin: 0.75rem auto 0;
   text-align: right;
+}
+
+.single-view .card .card-stapel {
+  display: none;
 }
 
 /* === MAIN === */
@@ -419,6 +450,52 @@ body {
 
 .compose-body::placeholder {
   color: var(--border);
+}
+
+.compose-stapel {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  color: var(--fg-muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 1rem;
+  line-height: 1.4;
+  padding: 0.5rem 0 0.75rem;
+  outline: none;
+  caret-color: var(--accent);
+  margin-top: 0.5rem;
+}
+
+.compose-stapel::placeholder {
+  color: var(--border);
+}
+
+.compose-stapel-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.5rem 0;
+}
+
+.compose-stapel-chip {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--fg-muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.6rem;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.compose-stapel-chip:hover,
+.compose-stapel-chip.active {
+  color: var(--fg);
+  border-color: var(--fg);
 }
 
 .compose-actions {
@@ -508,6 +585,7 @@ body {
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  position: relative;
 }
 
 /* === CARD LIST — ALLE (vertikal) === */
@@ -542,6 +620,18 @@ body {
   -webkit-user-select: none;
   -webkit-touch-callout: none;
   touch-action: pan-y;
+}
+
+.card-stapel {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--fg-muted);
+  opacity: 0.6;
+  position: absolute;
+  top: 0.6rem;
+  right: 0.75rem;
+  pointer-events: none;
+  letter-spacing: 0.04em;
 }
 
 .card-list--alle .card .card-body,
@@ -716,6 +806,27 @@ body {
   pointer-events: none;
 }
 
+.card-edit-stapel {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  color: var(--fg-muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 1rem;
+  padding: 0.4rem 0;
+  outline: none;
+  caret-color: var(--accent);
+  margin-top: 0.75rem;
+}
+
+.card-edit-stapel-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.4rem 0 0;
+}
+
 .card-edit-save-btn {
   display: block;
   margin-top: 1.25rem;
@@ -775,6 +886,135 @@ body {
   background: var(--fg);
   text-decoration: none;
   animation: blink 1s step-end infinite;
+}
+
+a.nav-menu-item {
+  text-decoration: none;
+}
+
+.nav-menu-item--active {
+  color: var(--fg);
+}
+
+.nav-menu-item--clear {
+  color: var(--fg-muted);
+  opacity: 0.6;
+}
+
+.stapel-section {
+  display: contents;
+}
+
+.sort-mode .stapel-section {
+  display: block;
+  margin-bottom: 1.5rem;
+}
+
+.stapel-section-header {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+  padding: 0.5rem 0 0.25rem;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.25rem;
+  text-transform: lowercase;
+}
+
+/* === STAPEL VIEW === */
+
+.stapel-list-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+}
+
+.stapel-row--new .stapel-row-name {
+  background: none;
+  border: none;
+  border-bottom: 1px solid transparent;
+  padding: 0;
+  width: 100%;
+  color: var(--fg);
+  opacity: 0.4;
+}
+
+.stapel-row--new .stapel-row-name:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+  opacity: 1;
+}
+
+.stapel-row--new .stapel-row-name::placeholder {
+  color: var(--fg-muted);
+  opacity: 1;
+}
+
+.stapel-row-save {
+  background: none;
+  border: none;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  cursor: pointer;
+  padding: 0.25rem 0.4rem;
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+
+.stapel-row-save:hover {
+  color: var(--fg);
+}
+
+.stapel-empty {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+}
+
+.stapel-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+  transition: opacity 0.2s;
+}
+
+.stapel-row-name {
+  flex: 1;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.2rem;
+  color: var(--fg);
+  outline: none;
+  cursor: pointer;
+}
+
+.stapel-row.renaming .stapel-row-name {
+  border-bottom: 1px solid var(--accent);
+  cursor: text;
+}
+
+.stapel-row-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+}
+
+.stapel-row-delete {
+  background: none;
+  border: none;
+  color: var(--fg-muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0.25rem 0.4rem;
+  transition: color 0.15s;
+  touch-action: manipulation;
+}
+
+.stapel-row-delete:hover {
+  color: var(--fg);
 }
 
 .empty-state-label {

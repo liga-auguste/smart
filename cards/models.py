@@ -11,9 +11,21 @@ class UserOwnedModel(models.Model):
         abstract = True
 
 
+class Stapel(UserOwnedModel):
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        unique_together = [('user', 'name')]
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
 class Card(UserOwnedModel):
     content = models.TextField()
     order = models.PositiveIntegerField(default=0)
+    stapel = models.CharField(max_length=100, blank=True, default='')
 
     class Meta:
         ordering = ['order', '-created_at']

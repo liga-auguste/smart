@@ -7,6 +7,7 @@
 
 {% block nav_menu_items %}
 <button type="button" class="nav-menu-item" id="menu-search">suchen</button>
+<a href="{% url 'stapel' %}" class="nav-menu-item">stapel</a>
 {% if alle %}
 <button type="button" class="nav-menu-item" id="menu-sort">sortieren</button>
 <button type="button" class="nav-menu-item" id="menu-delete">löschen</button>
@@ -28,9 +29,9 @@
 </div>
 {% endif %}
 
-<div class="card-list{% if alle %} card-list--alle{% endif %}">
+<div class="card-list{% if alle %} card-list--alle{% endif %}" data-stapel-list="{{ stapel_list|join:'|' }}">
   {% if not cards %}
-    {% if q %}
+    {% if q or stapel %}
     <div class="empty-state">
       <span class="empty-state-label">nichts gefunden.</span>
     </div>
@@ -41,7 +42,8 @@
     {% endif %}
   {% else %}
     {% for card in cards %}
-    <article class="card" id="card-{{ card.id }}" data-id="{{ card.id }}">
+    <article class="card" id="card-{{ card.id }}" data-id="{{ card.id }}" data-stapel="{{ card.stapel }}">
+      {% if card.stapel %}<span class="card-stapel">{{ card.stapel }}</span>{% endif %}
       <div class="card-display">
         <div class="card-headline">{{ card.content|headline }}</div>
         {% with rest=card.content|body %}{% if rest %}

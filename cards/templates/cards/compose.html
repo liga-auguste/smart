@@ -27,6 +27,23 @@
       spellcheck="false"
     ></textarea>
 
+    <input type="hidden" name="stapel" id="compose-stapel-value" value="{{ preset_stapel }}">
+    <input
+      type="text"
+      id="compose-stapel"
+      class="compose-stapel"
+      placeholder="stapel"
+      autocomplete="off"
+      spellcheck="false"
+    >
+    {% if stapel_suggestions %}
+    <div class="compose-stapel-chips" id="compose-stapel-chips" hidden>
+      {% for s in stapel_suggestions %}
+      <button type="button" class="compose-stapel-chip" data-value="{{ s }}">{{ s }}</button>
+      {% endfor %}
+    </div>
+    {% endif %}
+
     <div class="compose-actions">
       <button type="submit" class="btn-save">speichern</button>
     </div>

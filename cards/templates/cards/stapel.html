@@ -1,0 +1,29 @@
+{% extends 'cards/base.html' %}
+{% load static %}
+
+{% block title %}stapel — smart{% endblock %}
+
+{% block content %}
+<div class="stapel-list-wrap">
+  {% if not stapel_rows %}
+  <p class="stapel-empty">noch keine stapel.</p>
+  {% else %}
+  {% for s in stapel_rows %}
+  <div class="stapel-row" data-name="{{ s.stapel }}">
+    <span class="stapel-row-name">{{ s.stapel }}</span>
+    <span class="stapel-row-count">{{ s.count }}</span>
+    <button type="button" class="stapel-row-delete">×</button>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <div class="stapel-row stapel-row--new" id="stapel-row-new">
+    <input type="text" class="stapel-row-name" id="stapel-new-name" placeholder="neuer stapel" autocomplete="off" spellcheck="false">
+    <button type="button" class="stapel-row-save" id="stapel-new-save" hidden>speichern</button>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/stapel.js' %}"></script>
+{% endblock %}

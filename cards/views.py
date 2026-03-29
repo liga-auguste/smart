@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
-from .models import Card
+from .models import Card, Stapel
 
 
 @login_required
@@ -12,11 +12,17 @@ def compose(request):
     if request.method == 'POST':
         headline = request.POST.get('headline', '').strip()
         body = request.POST.get('body', '').strip()
+        stapel = request.POST.get('stapel', '').strip()
         content = (headline + '\n' + body) if body else headline
 
         if content:
-            Card.objects.create(user=request.user, content=content)
+            Card.objects.create(user=request.user, content=content, stapel=stapel)
+            if stapel:
+                Stapel.objects.get_or_create(user=request.user, name=stapel)
 
+        if stapel:
+            from django.urls import reverse
+            return redirect(reverse('list') + f'?stapel={stapel}')
         return redirect('list')
 
     shared = ' '.join(filter(None, [
@@ -24,12 +30,18 @@ def compose(request):
         request.GET.get('text', '').strip(),
         request.GET.get('url', '').strip(),
     ]))
-    return render(request, 'cards/compose.html', {'shared': shared})
+    preset_stapel = request.GET.get('stapel', '').strip()
+    stapel_suggestions = list(dict.fromkeys(
+        s.strip() for s in Card.objects.filter(user=request.user)
+        .exclude(stapel='').values_list('stapel', flat=True) if s.strip()
+    ))
+    return render(request, 'cards/compose.html', {'shared': shared, 'stapel_suggestions': stapel_suggestions, 'preset_stapel': preset_stapel})
 
 
 @login_required
 def card_list(request):
     q = request.GET.get('q', '').strip()
+    stapel = request.GET.get('stapel', '').strip()
     alle = 'alle' in request.GET
     cards = Card.objects.filter(user=request.user)
     if q:
@@ -37,7 +49,14 @@ def card_list(request):
         alle = True
     else:
         cards = cards.order_by('-created_at')
-    return render(request, 'cards/list.html', {'cards': cards, 'alle': alle, 'q': q})
+    if stapel:
+        cards = cards.filter(stapel=stapel)
+        alle = True
+    stapel_list = list(dict.fromkeys(
+        s.strip() for s in Card.objects.filter(user=request.user)
+        .exclude(stapel='').values_list('stapel', flat=True) if s.strip()
+    ))
+    return render(request, 'cards/list.html', {'cards': cards, 'alle': alle, 'q': q, 'stapel': stapel, 'stapel_list': stapel_list})
 
 
 @login_required
@@ -81,6 +100,73 @@ def edit_card(request, card_id):
 
     if content:
         card.content = content
+    if 'stapel' in data:
+        card.stapel = data['stapel'].strip()
+        if card.stapel:
+            Stapel.objects.get_or_create(user=request.user, name=card.stapel)
+    if content or 'stapel' in data:
         card.save()
 
+    return JsonResponse({'ok': True})
+
+
+@login_required
+def stapel_list(request):
+    from django.db.models import Count
+    counts = {
+        row['stapel']: row['count']
+        for row in Card.objects.filter(user=request.user)
+        .exclude(stapel='').values('stapel').annotate(count=Count('id'))
+    }
+    stapel_rows = [
+        {'stapel': s.name, 'count': counts.get(s.name, 0)}
+        for s in Stapel.objects.filter(user=request.user)
+    ]
+    return render(request, 'cards/stapel.html', {'stapel_rows': stapel_rows})
+
+
+@login_required
+@require_POST
+def create_stapel(request):
+    try:
+        data = json.loads(request.body)
+        name = data.get('name', '').strip()
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'invalid json'}, status=400)
+    if not name:
+        return JsonResponse({'error': 'missing name'}, status=400)
+    _, created = Stapel.objects.get_or_create(user=request.user, name=name)
+    if not created:
+        return JsonResponse({'error': 'exists'}, status=409)
+    return JsonResponse({'ok': True, 'name': name, 'count': 0})
+
+
+@login_required
+@require_POST
+def rename_stapel(request):
+    try:
+        data = json.loads(request.body)
+        old_name = data.get('old_name', '').strip()
+        new_name = data.get('new_name', '').strip()
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'invalid json'}, status=400)
+    if not old_name or not new_name:
+        return JsonResponse({'error': 'missing name'}, status=400)
+    Card.objects.filter(user=request.user, stapel=old_name).update(stapel=new_name)
+    Stapel.objects.filter(user=request.user, name=old_name).update(name=new_name)
+    return JsonResponse({'ok': True})
+
+
+@login_required
+@require_POST
+def delete_stapel(request):
+    try:
+        data = json.loads(request.body)
+        name = data.get('name', '').strip()
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'invalid json'}, status=400)
+    if not name:
+        return JsonResponse({'error': 'missing name'}, status=400)
+    Card.objects.filter(user=request.user, stapel=name).update(stapel='')
+    Stapel.objects.filter(user=request.user, name=name).delete()
     return JsonResponse({'ok': True})

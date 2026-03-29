@@ -10,13 +10,50 @@ function enterMode(m) {
   cardList.classList.add(m + '-mode');
   if (menuBtn) { menuBtn.textContent = 'fertig'; menuBtn.classList.add('sort-active'); }
   if (menuDropdown) menuDropdown.hidden = true;
+  if (m === 'sort') buildSortGroups();
 }
 
 function exitMode() {
   if (!cardList || !activeMode) return;
+  if (activeMode === 'sort') teardownSortGroups();
   cardList.classList.remove(activeMode + '-mode');
   activeMode = null;
   if (menuBtn) { menuBtn.textContent = '⋯'; menuBtn.classList.remove('sort-active'); }
+}
+
+function buildSortGroups() {
+  const cards = [...cardList.querySelectorAll('.card')];
+  const stapelValues = [...new Set(cards.map(c => c.dataset.stapel || ''))];
+  if (stapelValues.length <= 1) return;
+
+  const groups = {};
+  const order = [];
+  cards.forEach(card => {
+    const s = card.dataset.stapel || '';
+    if (!groups[s]) { groups[s] = []; order.push(s); }
+    groups[s].push(card);
+    card.remove();
+  });
+
+  order.forEach(s => {
+    const section = document.createElement('div');
+    section.className = 'stapel-section';
+    section.dataset.stapel = s;
+    const header = document.createElement('div');
+    header.className = 'stapel-section-header';
+    header.textContent = s || 'ohne stapel';
+    section.appendChild(header);
+    groups[s].forEach(c => section.appendChild(c));
+    cardList.appendChild(section);
+  });
+}
+
+function teardownSortGroups() {
+  const sections = [...cardList.querySelectorAll('.stapel-section')];
+  if (!sections.length) return;
+  const cards = [...cardList.querySelectorAll('.card')];
+  sections.forEach(s => s.remove());
+  cards.forEach(c => cardList.appendChild(c));
 }
 
 if (menuBtn && menuDropdown) {
@@ -39,13 +76,29 @@ if (menuBtn && menuDropdown) {
 document.getElementById('menu-sort')?.addEventListener('click', () => { enterMode('sort'); });
 document.getElementById('menu-delete')?.addEventListener('click', () => { enterMode('delete'); });
 
+
 if (isSingleView) {
   document.body.classList.add('single-view');
+
+  const navStapel = document.getElementById('nav-stapel');
+
+  if (navStapel && !navStapel.classList.contains('nav-stapel--active')) {
+    navStapel.style.cursor = 'pointer';
+    navStapel.addEventListener('click', () => {
+      const s = navStapel.textContent.trim();
+      if (s) window.location.href = `/cards/?stapel=${encodeURIComponent(s)}`;
+    });
+  }
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       e.target.classList.toggle('in-view', e.isIntersecting);
-      if (e.isIntersecting) localStorage.setItem('lastCard', e.target.id);
+      if (e.isIntersecting) {
+        localStorage.setItem('lastCard', e.target.id);
+        if (navStapel && !navStapel.classList.contains('nav-stapel--active')) {
+          navStapel.textContent = e.target.dataset.stapel || '';
+        }
+      }
     });
   }, { threshold: 0.5 });
 
@@ -187,6 +240,14 @@ if (cardList) {
         const target = cardList.querySelector('.card.drag-over');
         cardList.querySelectorAll('.card').forEach(c => c.classList.remove('drag-over'));
         if (target && target !== dragged) {
+          const draggedStapel = dragged.dataset.stapel || '';
+          const targetStapel = target.dataset.stapel || '';
+          if (draggedStapel !== targetStapel) {
+            dragged.dataset.stapel = targetStapel;
+            const targetSection = target.closest('.stapel-section');
+            if (targetSection) targetSection.appendChild(dragged);
+            updateCardStapel(dragged, targetStapel);
+          }
           const cards = [...cardList.querySelectorAll('.card')];
           if (cards.indexOf(dragged) < cards.indexOf(target)) target.after(dragged);
           else target.before(dragged);
@@ -197,6 +258,14 @@ if (cardList) {
     }
     downCard = null;
     mode = null;
+  }
+
+  function updateCardStapel(card, stapel) {
+    fetch(`/api/cards/${card.dataset.id}/edit/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+      body: JSON.stringify({ stapel }),
+    }).catch(() => {});
   }
 
   function saveOrder() {
@@ -217,6 +286,7 @@ document.querySelectorAll('.card').forEach(card => {
   let blurTimer = null;
   let originalHeadline = '';
   let originalBody = '';
+  let originalStapel = '';
   let pointerStart = null;
   let navTimer = null;
 
@@ -271,6 +341,7 @@ document.querySelectorAll('.card').forEach(card => {
 
     originalHeadline = headlineEl.textContent;
     originalBody = bodyEl.innerText;
+    originalStapel = card.dataset.stapel || '';
 
     card.classList.add('editing');
     headlineEl.contentEditable = 'true';
@@ -283,6 +354,37 @@ document.querySelectorAll('.card').forEach(card => {
     headlineEl.addEventListener('blur', scheduleExit);
     bodyEl.addEventListener('blur', scheduleExit);
     bodyEl.addEventListener('keydown', onBodyKeydown);
+
+    const stapelInput = document.createElement('input');
+    stapelInput.type = 'text';
+    stapelInput.className = 'card-edit-stapel';
+    stapelInput.placeholder = 'stapel';
+    stapelInput.value = originalStapel;
+    stapelInput.autocomplete = 'off';
+    stapelInput.spellcheck = false;
+    stapelInput.addEventListener('mousedown', (e) => e.stopPropagation());
+    stapelInput.addEventListener('blur', scheduleExit);
+    display.appendChild(stapelInput);
+
+    const stapelList = (document.querySelector('[data-stapel-list]')?.dataset.stapelList || '').split('|').filter(Boolean);
+    if (stapelList.length) {
+      const chipsEl = document.createElement('div');
+      chipsEl.className = 'card-edit-stapel-chips';
+      stapelList.forEach(s => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'compose-stapel-chip' + (s === originalStapel ? ' active' : '');
+        chip.textContent = s;
+        chip.addEventListener('mousedown', (e) => e.preventDefault());
+        chip.addEventListener('click', () => {
+          stapelInput.value = s;
+          chipsEl.querySelectorAll('.compose-stapel-chip').forEach(c => c.classList.toggle('active', c === chip));
+          stapelInput.focus();
+        });
+        chipsEl.appendChild(chip);
+      });
+      display.appendChild(chipsEl);
+    }
 
     const saveBtn = document.createElement('button');
     saveBtn.type = 'button';
@@ -327,7 +429,13 @@ document.querySelectorAll('.card').forEach(card => {
     const headlineEl = display.querySelector('.card-headline');
     const bodyEl = display.querySelector('.card-body');
     const saveBtn = display.querySelector('.card-edit-save-btn');
+    const stapelInput = display.querySelector('.card-edit-stapel');
+    const chipsEl = display.querySelector('.card-edit-stapel-chips');
     if (saveBtn) saveBtn.remove();
+    if (chipsEl) chipsEl.remove();
+
+    const newStapel = stapelInput ? stapelInput.value.trim() : originalStapel;
+    if (stapelInput) stapelInput.remove();
 
     card.classList.remove('editing');
     headlineEl.contentEditable = 'false';
@@ -349,12 +457,36 @@ document.querySelectorAll('.card').forEach(card => {
     const body = bodyEl ? bodyEl.innerText.trim() : '';
     const newContent = body ? headline + '\n' + body : headline;
     const oldContent = originalBody ? originalHeadline + '\n' + originalBody : originalHeadline;
+    const contentChanged = newContent !== oldContent && headline;
+    const stapelChanged = newStapel !== originalStapel;
 
-    if (newContent !== oldContent && headline) {
+    if (contentChanged || stapelChanged) {
+      const payload = {};
+      if (contentChanged) payload.content = newContent;
+      if (stapelChanged) {
+        payload.stapel = newStapel;
+        card.dataset.stapel = newStapel;
+        const navStapelEl = document.getElementById('nav-stapel');
+        if (navStapelEl && !navStapelEl.classList.contains('nav-stapel--active') && card.classList.contains('in-view')) {
+          navStapelEl.textContent = newStapel;
+        }
+        const stapelLabel = card.querySelector('.card-stapel');
+        if (newStapel) {
+          if (stapelLabel) stapelLabel.textContent = newStapel;
+          else {
+            const label = document.createElement('span');
+            label.className = 'card-stapel';
+            label.textContent = newStapel;
+            card.prepend(label);
+          }
+        } else if (stapelLabel) {
+          stapelLabel.remove();
+        }
+      }
       fetch(`/api/cards/${card.dataset.id}/edit/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
-        body: JSON.stringify({ content: newContent }),
+        body: JSON.stringify(payload),
       }).catch(() => {});
     }
   }

@@ -31,6 +31,12 @@
       {% endif %}
       <a href="{% url 'compose' %}" class="nav-link">neu</a>
       <span class="nav-spacer"></span>
+      {% if stapel %}
+      <a href="{% url 'list' %}" class="nav-stapel nav-stapel--active" id="nav-stapel">{{ stapel }} ×</a>
+      {% else %}
+      <span class="nav-stapel" id="nav-stapel"></span>
+      {% endif %}
+      <span class="nav-spacer"></span>
       <button class="theme-toggle" id="theme-toggle" title="theme wechseln">◑</button>
       <div class="nav-menu-wrap">
         <button class="nav-menu-btn" id="nav-menu-btn" type="button">⋯</button>

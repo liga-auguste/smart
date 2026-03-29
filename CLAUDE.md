@@ -31,13 +31,17 @@ class UserOwnedModel(models.Model):
 class Card(UserOwnedModel):
     content = models.TextField()
     order = models.PositiveIntegerField(default=0)
+    stapel = models.CharField(max_length=100, blank=True, default='')
     class Meta:
         ordering = ['order', '-created_at']
 ```
 
-### Geplant: Stapel
+### Stapel
 
-Karten sollen einem oder mehreren Stapeln zugeordnet werden können — zur thematischen Gruppierung und Filterung (z.B. „bücher", „arbeit", „ideen"). Noch nicht im Modell, noch kein UI.
+- Kein separates Modell — `stapel` ist ein `CharField` direkt auf `Card`
+- Ein Stapel pro Karte, optional (leer = kein Stapel)
+- Stapelnamen werden dynamisch aus den vorhandenen Karten abgeleitet
+- Umbenennen/Löschen via API (`/api/stapel/rename/`, `/api/stapel/delete/`) aktualisiert alle betroffenen Karten
 
 ---
 
@@ -125,6 +129,7 @@ smart/
 - [x] Onboarding (3-Slide-Overlay, Theme-Karussell, direktionales Tippen, re-aufrufbar via „über")
 - [x] Nav-Refactor (⋯-Menü in base.html, `nav_menu_items`-Block, ◑ immer sichtbar)
 - [x] Root-URL `/` leitet zu `/cards/` weiter (kein versehentliches Landen auf Compose)
+- [x] Stapel — `CharField` auf `Card`, Zuordnung in Compose (Chips, Autocomplete, Hidden Input), Inline-Editor auf Karten, Sort-Modus gruppiert nach Stapel mit Drag zwischen Gruppen, Stapel-View (`/stapel/`) mit Umbenennen + Löschen (Confirm), Stapel-Chip in Nav (Einzelansicht, filtert auf Tap, × zum Zurücksetzen)
 
 ---
 
@@ -132,7 +137,6 @@ smart/
 
 - [ ] Chronologische Timeline-Ansicht
 - [ ] Zufällige Karte anzeigen
-- [ ] Stapel implementieren — Modell, Zuordnung im Compose, Filterung in der Liste
 
 ---
 
