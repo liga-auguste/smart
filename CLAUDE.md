@@ -11,8 +11,10 @@ Eine minimalistische persönliche Wissenssammlung. Kein Lern-Tool, kein Review-S
 - **Backend**: Django, App heißt `cards`
 - **Datenbank**: SQLite (dev), PostgreSQL (prod)
 - **Frontend**: Custom CSS (kein Framework), Mobile-first
+- **AI**: keine
 - **Schriften**: DM Serif Display + DM Mono (lokal eingebunden, keine Google Fonts)
 - **PWA**: manifest.json vorhanden, Share Target implementiert
+- **Kein AI** — keine Claude API Integration, bewusste Entscheidung
 
 ---
 
