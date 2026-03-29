@@ -28,13 +28,13 @@ if (isSingleView) {
   }
 }
 
-// === DRAG, DROP & SWIPE-TO-DELETE (liste view) ===
+// === DRAG, DROP & DELETE (liste view) ===
 
 const cardList = document.querySelector('.card-list--alle');
 let isDragging = false;
 
 if (cardList) {
-  let mode = null; // 'drag' | 'swipe' | null
+  let mode = null;
   let dragged = null;
   let ghost = null;
   let offsetY = 0;
@@ -42,155 +42,72 @@ if (cardList) {
   let downX = 0;
   let downY = 0;
   let downPointerId = null;
-  let openCard = null; // card currently swiped open showing delete btn
-  let longPressTimer = null;
+  let activeMode = null; // 'sort' | 'delete' | null
 
-  // Wrap each card and add delete button to wrapper
   cardList.querySelectorAll('.card').forEach(card => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'card-swipe-wrapper';
-    card.parentNode.insertBefore(wrapper, card);
-    wrapper.appendChild(card);
+    const handle = document.createElement('span');
+    handle.className = 'card-drag-handle';
+    handle.setAttribute('aria-hidden', 'true');
+    card.appendChild(handle);
 
     const btn = document.createElement('button');
     btn.className = 'card-delete-btn';
     btn.type = 'button';
-    btn.textContent = 'löschen';
-    wrapper.appendChild(btn);
-
+    btn.textContent = '×';
+    btn.addEventListener('pointerdown', (e) => e.stopPropagation());
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       deleteCard(card);
     });
+    card.appendChild(btn);
+
+    handle.addEventListener('pointerdown', (e) => {
+      if (activeMode !== 'sort') return;
+      if (e.button !== 0 && e.pointerType === 'mouse') return;
+      e.preventDefault();
+      e.stopPropagation();
+      downCard = card;
+      downX = e.clientX;
+      downY = e.clientY;
+      downPointerId = e.pointerId;
+      mode = 'drag';
+      isDragging = true;
+      if (navigator.vibrate) navigator.vibrate(20);
+      handle.setPointerCapture(e.pointerId);
+      startDrag(card, e);
+    });
   });
-
-  function snapOpen(card) {
-    const wrapper = card.parentNode;
-    const btn = wrapper.querySelector('.card-delete-btn');
-    const snapX = -(btn.offsetWidth + 24);
-    card.style.transition = 'transform 0.2s ease';
-    card.style.transform = `translateX(${snapX}px)`;
-    wrapper.classList.add('swipe-open');
-    setTimeout(() => { card.style.transition = ''; }, 200);
-    openCard = card;
-  }
-
-  function snapClosed(card) {
-    card.style.transition = 'transform 0.2s ease, opacity 0.2s ease';
-    card.style.transform = '';
-    card.style.opacity = '';
-    card.parentNode.classList.remove('swipe-open');
-    card.classList.remove('swiping');
-    setTimeout(() => { card.style.transition = ''; }, 200);
-    if (openCard === card) openCard = null;
-  }
 
   function deleteCard(card) {
     const id = parseInt(card.dataset.id);
-    const wrapper = card.parentNode;
-    const h = wrapper.offsetHeight;
-    card.style.transition = 'transform 0.2s ease, opacity 0.2s ease';
-    card.style.transform = 'translateX(-100%)';
+    const h = card.offsetHeight;
+    card.style.transition = 'opacity 0.2s ease';
     card.style.opacity = '0';
     setTimeout(() => {
-      wrapper.style.transition = 'height 0.18s ease';
-      wrapper.style.overflow = 'hidden';
-      wrapper.style.height = h + 'px';
-      requestAnimationFrame(() => { wrapper.style.height = '0'; });
-      setTimeout(() => wrapper.remove(), 180);
+      card.style.transition = 'height 0.18s ease';
+      card.style.overflow = 'hidden';
+      card.style.height = h + 'px';
+      requestAnimationFrame(() => { card.style.height = '0'; });
+      setTimeout(() => card.remove(), 180);
     }, 200);
     fetch(`/api/cards/${id}/delete/`, {
       method: 'POST',
       headers: { 'X-CSRFToken': getCookie('csrftoken') },
     }).catch(() => {});
-    openCard = null;
   }
 
-  // Close open card when tapping elsewhere
-  document.addEventListener('pointerdown', (e) => {
-    if (openCard && !openCard.parentNode.contains(e.target)) {
-      snapClosed(openCard);
-    }
-  }, { capture: true });
-
-  cardList.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('pointerdown', (e) => {
-      if (e.button !== 0 && e.pointerType === 'mouse') return;
-      if (openCard === card && !e.target.closest('.card-delete-btn')) {
-        snapClosed(card);
-        e.stopPropagation();
-        return;
-      }
-      downCard = card;
-      downX = e.clientX;
-      downY = e.clientY;
-      downPointerId = e.pointerId;
-      mode = null;
-
-      if (e.pointerType !== 'mouse') {
-        longPressTimer = setTimeout(() => {
-          longPressTimer = null;
-          if (!downCard) return;
-          if (openCard) snapClosed(openCard);
-          mode = 'drag';
-          isDragging = true;
-          if (navigator.vibrate) navigator.vibrate(30);
-          downCard.setPointerCapture(downPointerId);
-          startDrag(downCard, { clientX: downX, clientY: downY });
-        }, 400);
-      }
-    });
-  });
-
   document.addEventListener('pointermove', (e) => {
-    if (!downCard) return;
-    const dx = e.clientX - downX;
-    const dy = e.clientY - downY;
-    const adx = Math.abs(dx);
-    const ady = Math.abs(dy);
+    if (mode !== 'drag' || !downCard) return;
+    e.preventDefault();
+    if (!ghost) return;
+    ghost.style.top = `${e.clientY - offsetY}px`;
 
-    if (mode === null) {
-      if (e.pointerType === 'mouse') {
-        if (ady > 5) {
-          mode = 'drag';
-          isDragging = true;
-          startDrag(downCard, { clientX: downX, clientY: downY });
-        }
-      } else {
-        // Touch: bei Bewegung long press abbrechen
-        if (adx > 8 || ady > 8) {
-          if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
-        }
-        if (adx > 10 && adx > ady * 1.5 && dx < 0) {
-          // links swipen → löschen
-          if (openCard && openCard !== downCard) snapClosed(openCard);
-          mode = 'swipe';
-          downCard.setPointerCapture(downPointerId);
-          downCard.classList.add('swiping');
-        } else if (ady > 8) {
-          downCard = null;
-        }
-      }
-    }
+    ghost.style.visibility = 'hidden';
+    const target = document.elementFromPoint(e.clientX, e.clientY)?.closest('.card-list--alle .card');
+    ghost.style.visibility = '';
 
-    if (mode === 'swipe') {
-      const tx = Math.min(0, dx);
-      downCard.style.transform = `translateX(${tx}px)`;
-      downCard.style.opacity = 1 + tx / downCard.offsetWidth * 0.3;
-    }
-
-    if (mode === 'drag') {
-      e.preventDefault();
-      if (!ghost) return;
-      ghost.style.top = `${e.clientY - offsetY}px`;
-
-      ghost.style.visibility = 'hidden';
-      const target = document.elementFromPoint(e.clientX, e.clientY)?.closest('.card-list--alle .card');
-      ghost.style.visibility = '';
-
-      cardList.querySelectorAll('.card').forEach(c => c.classList.remove('drag-over'));
-      if (target && target !== dragged) target.classList.add('drag-over');
-    }
+    cardList.querySelectorAll('.card').forEach(c => c.classList.remove('drag-over'));
+    if (target && target !== dragged) target.classList.add('drag-over');
   }, { passive: false });
 
   document.addEventListener('pointerup', onUp);
@@ -223,17 +140,6 @@ if (cardList) {
   }
 
   function onUp(e) {
-    if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
-
-    if (mode === 'swipe' && downCard) {
-      const dx = e.clientX - downX;
-      if (Math.abs(dx) > downCard.offsetWidth * 0.35) {
-        snapOpen(downCard);
-      } else {
-        snapClosed(downCard);
-      }
-    }
-
     if (mode === 'drag') {
       isDragging = false;
       if (ghost) { ghost.remove(); ghost = null; }
@@ -244,16 +150,13 @@ if (cardList) {
         cardList.querySelectorAll('.card').forEach(c => c.classList.remove('drag-over'));
         if (target && target !== dragged) {
           const cards = [...cardList.querySelectorAll('.card')];
-          const draggedWrapper = dragged.parentNode;
-          const targetWrapper = target.parentNode;
-          if (cards.indexOf(dragged) < cards.indexOf(target)) targetWrapper.after(draggedWrapper);
-          else targetWrapper.before(draggedWrapper);
+          if (cards.indexOf(dragged) < cards.indexOf(target)) target.after(dragged);
+          else target.before(dragged);
           saveOrder();
         }
         dragged = null;
       }
     }
-
     downCard = null;
     mode = null;
   }
@@ -266,6 +169,52 @@ if (cardList) {
       body: JSON.stringify({ ids }),
     }).catch(() => {});
   }
+
+  // === MENU & MODI ===
+
+  const menuBtn = document.getElementById('nav-menu-btn');
+  const menuDropdown = document.getElementById('nav-menu-dropdown');
+
+  function enterMode(m) {
+    activeMode = m;
+    cardList.classList.add(m + '-mode');
+    menuBtn.textContent = 'fertig';
+    menuBtn.classList.add('sort-active');
+  }
+
+  function exitMode() {
+    cardList.classList.remove(activeMode + '-mode');
+    activeMode = null;
+    menuBtn.textContent = '⋯';
+    menuBtn.classList.remove('sort-active');
+  }
+
+  if (menuBtn) {
+    menuBtn.addEventListener('pointerdown', (e) => {
+      e.stopPropagation();
+      if (activeMode) {
+        exitMode();
+      } else {
+        menuDropdown.hidden = !menuDropdown.hidden;
+      }
+    });
+  }
+
+  document.getElementById('menu-sort')?.addEventListener('click', () => {
+    menuDropdown.hidden = true;
+    enterMode('sort');
+  });
+
+  document.getElementById('menu-delete')?.addEventListener('click', () => {
+    menuDropdown.hidden = true;
+    enterMode('delete');
+  });
+
+  document.addEventListener('pointerdown', (e) => {
+    if (!menuDropdown.hidden && !menuDropdown.contains(e.target) && e.target !== menuBtn) {
+      menuDropdown.hidden = true;
+    }
+  }, { capture: true });
 }
 
 // === TAP / EDIT ===
@@ -433,25 +382,63 @@ if (isSingleView) {
 
 // === SUCHE ===
 
+
 const navSearchToggle = document.getElementById('nav-search-toggle');
 const searchBar = document.getElementById('search-bar');
 const searchBarInput = document.getElementById('search-bar-input');
 
 if (navSearchToggle && searchBar) {
-  navSearchToggle.addEventListener('click', () => {
+  const nav = document.querySelector('.nav');
+  let searchBlurFromPointer = false;
+
+  document.addEventListener('pointerdown', (e) => {
+    if (!searchBar.hidden && !searchBar.contains(e.target)) {
+      searchBlurFromPointer = true;
+    }
+  }, { capture: true });
+
+  function openSearch() {
+    if (isSingleView) {
+      document.body.classList.add('nav-visible');
+      searchBar.style.top = nav.offsetHeight + 'px';
+    }
     searchBar.removeAttribute('hidden');
     searchBarInput.focus();
+  }
+
+  function closeSearch() {
+    searchBar.setAttribute('hidden', '');
+    if (isSingleView) {
+      document.body.classList.remove('nav-visible');
+      searchBar.style.top = '';
+    }
+  }
+
+  searchBarInput.addEventListener('blur', () => {
+    const fromPointer = searchBlurFromPointer;
+    searchBlurFromPointer = false;
+    if (!fromPointer && searchBarInput.value.trim()) {
+      searchBarInput.closest('form').submit();
+    }
+  });
+
+  navSearchToggle.addEventListener('click', () => {
+    if (!searchBar.hidden) {
+      closeSearch();
+    } else {
+      openSearch();
+    }
   });
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !searchBar.hidden && !searchBarInput.value) {
-      searchBar.setAttribute('hidden', '');
+      closeSearch();
     }
   });
 
   document.addEventListener('pointerdown', (e) => {
-    if (!searchBar.hidden && !searchBarInput.value && !searchBar.contains(e.target) && e.target !== navSearchToggle) {
-      searchBar.setAttribute('hidden', '');
+    if (!searchBar.hidden && !searchBarInput.value && !searchBar.contains(e.target) && !navSearchToggle.contains(e.target)) {
+      closeSearch();
     }
   });
 }

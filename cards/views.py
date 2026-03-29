@@ -19,7 +19,12 @@ def compose(request):
 
         return redirect('list')
 
-    return render(request, 'cards/compose.html')
+    shared = ' '.join(filter(None, [
+        request.GET.get('title', '').strip(),
+        request.GET.get('text', '').strip(),
+        request.GET.get('url', '').strip(),
+    ]))
+    return render(request, 'cards/compose.html', {'shared': shared})
 
 
 @login_required

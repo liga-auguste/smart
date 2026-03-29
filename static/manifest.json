@@ -5,6 +5,15 @@
   "display": "standalone",
   "background_color": "#0d0d0d",
   "theme_color": "#0d0d0d",
+  "share_target": {
+    "action": "/compose/",
+    "method": "GET",
+    "params": {
+      "text": "text",
+      "url": "url",
+      "title": "title"
+    }
+  },
   "icons": [
     {
       "src": "/static/icons/apple-touch-icon.png",

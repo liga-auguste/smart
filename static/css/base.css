@@ -1,11 +1,31 @@
 /* === BASE === */
 
+/* Latin Extended — muss VOR Latin stehen */
+@font-face {
+  font-family: 'DM Serif Display';
+  src: url('/static/fonts/dm-serif-display-latin-ext-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 @font-face {
   font-family: 'DM Serif Display';
   src: url('/static/fonts/dm-serif-display-latin-400-normal.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'DM Mono';
+  src: url('/static/fonts/dm-mono-latin-ext-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 @font-face {
@@ -14,6 +34,16 @@
   font-weight: 400;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'DM Mono';
+  src: url('/static/fonts/dm-mono-latin-ext-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 @font-face {
@@ -22,6 +52,7 @@
   font-weight: 500;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 :root {
@@ -165,7 +196,12 @@ body {
 /* === NAV SEARCH === */
 
 .single-view .search-bar {
-  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
 }
 
 .nav-search-toggle {
@@ -205,12 +241,17 @@ body {
   border-bottom: 1px solid var(--border);
   color: var(--fg);
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 1rem;
   padding: 0.25rem 0;
   outline: none;
   min-width: 0;
   -webkit-appearance: none;
   border-radius: 0;
+}
+
+.search-bar-input::-webkit-search-decoration,
+.search-bar-input::-webkit-search-cancel-button {
+  display: none;
 }
 
 .search-bar-input::placeholder {
@@ -220,6 +261,7 @@ body {
 .search-bar-input:focus {
   border-bottom-color: var(--accent);
 }
+
 
 .search-bar-clear {
   color: var(--fg-muted);
@@ -258,6 +300,10 @@ body {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s;
+}
+
+.single-view .nav .nav-search-toggle {
+  pointer-events: auto;
 }
 
 
@@ -473,12 +519,6 @@ body {
   width: 100%;
 }
 
-.card-swipe-wrapper {
-  position: relative;
-  overflow: hidden;
-  border-bottom: 1px solid var(--border);
-}
-
 .card-list--alle .card {
   width: 100%;
   min-width: 0;
@@ -489,7 +529,7 @@ body {
   padding: 1.5rem 0 1.5rem 1rem;
   overflow-y: visible;
   border-right: none;
-  border-bottom: none;
+  border-bottom: 1px solid var(--border);
   position: relative;
   cursor: pointer;
   user-select: none;
@@ -508,40 +548,30 @@ body {
   margin-bottom: 0;
 }
 
-/* delete button (revealed on swipe) */
 .card-delete-btn {
+  display: none;
   position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  padding: 0 1.5rem;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  color: var(--accent);
+  font-size: 1.2rem;
+  color: var(--fg-muted);
   cursor: pointer;
-  white-space: nowrap;
-  pointer-events: none;
+  padding: 0.75rem 0.5rem;
+  touch-action: manipulation;
+  line-height: 1;
 }
 
-.card-swipe-wrapper.swipe-open .card-delete-btn {
-  pointer-events: auto;
+.card-list--alle.delete-mode .card-delete-btn {
+  display: block;
 }
 
-@media (hover: hover) {
-  .card-swipe-wrapper:hover .card-delete-btn {
-    pointer-events: auto;
-    opacity: 1;
-  }
-
-  .card-delete-btn {
-    opacity: 0;
-    transition: opacity 0.15s;
-  }
+.card-list--alle.delete-mode .card {
+  padding-right: 2.5rem;
+  cursor: default;
 }
 
 
@@ -553,6 +583,92 @@ body {
 
 .card-list--alle .card.drag-over {
   border-top: 2px solid var(--accent);
+}
+
+/* === DRAG HANDLE === */
+
+.card-drag-handle {
+  display: none;
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0.75rem 0.25rem;
+  color: var(--accent);
+  font-size: 1rem;
+  font-family: var(--font-mono);
+  line-height: 1;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  opacity: 0.8;
+}
+
+.card-drag-handle::before {
+  content: '⠿';
+}
+
+.card-drag-handle:active {
+  cursor: grabbing;
+  opacity: 1;
+}
+
+.card-list--alle.sort-mode .card-drag-handle {
+  display: block;
+}
+
+.card-list--alle.sort-mode .card {
+  padding-right: 2.5rem;
+  cursor: default;
+}
+
+/* === THREE-DOT MENU === */
+
+.nav-menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  font-family: inherit;
+  padding: 0.5rem;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-menu-btn.sort-active {
+  color: var(--accent);
+  letter-spacing: normal;
+}
+
+.nav-menu-dropdown {
+  position: absolute;
+  right: 1.5rem;
+  top: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  min-width: 9rem;
+  z-index: 20;
+}
+
+.nav-menu-item {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  color: var(--fg-muted);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-align: left;
+  cursor: pointer;
+}
+
+.nav-menu-item:hover {
+  color: var(--fg);
+  background: var(--bg);
 }
 
 
@@ -698,7 +814,7 @@ body {
   border: 1px solid var(--border);
   color: var(--fg);
   font-family: 'DM Mono', monospace;
-  font-size: 0.9rem;
+  font-size: 1rem;
   padding: 0.6rem 0.75rem;
   outline: none;
   width: 100%;
