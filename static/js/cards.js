@@ -1,4 +1,44 @@
 const isSingleView = !document.querySelector('.card-list--alle');
+const cardList = document.querySelector('.card-list--alle');
+const menuBtn = document.getElementById('nav-menu-btn');
+const menuDropdown = document.getElementById('nav-menu-dropdown');
+let activeMode = null;
+
+function enterMode(m) {
+  if (!cardList) return;
+  activeMode = m;
+  cardList.classList.add(m + '-mode');
+  if (menuBtn) { menuBtn.textContent = 'fertig'; menuBtn.classList.add('sort-active'); }
+  if (menuDropdown) menuDropdown.hidden = true;
+}
+
+function exitMode() {
+  if (!cardList || !activeMode) return;
+  cardList.classList.remove(activeMode + '-mode');
+  activeMode = null;
+  if (menuBtn) { menuBtn.textContent = '⋯'; menuBtn.classList.remove('sort-active'); }
+}
+
+if (menuBtn && menuDropdown) {
+  menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (activeMode) {
+      exitMode();
+    } else {
+      menuDropdown.hidden = !menuDropdown.hidden;
+    }
+  });
+
+  document.addEventListener('pointerdown', (e) => {
+    if (!menuDropdown.hidden && !menuDropdown.contains(e.target) && !e.target.closest('.nav-menu-wrap')) {
+      menuDropdown.hidden = true;
+    }
+  }, { capture: true });
+}
+
+document.getElementById('menu-sort')?.addEventListener('click', () => { enterMode('sort'); });
+document.getElementById('menu-delete')?.addEventListener('click', () => { enterMode('delete'); });
+
 if (isSingleView) {
   document.body.classList.add('single-view');
 
@@ -30,7 +70,6 @@ if (isSingleView) {
 
 // === DRAG, DROP & DELETE (liste view) ===
 
-const cardList = document.querySelector('.card-list--alle');
 let isDragging = false;
 
 if (cardList) {
@@ -42,7 +81,6 @@ if (cardList) {
   let downX = 0;
   let downY = 0;
   let downPointerId = null;
-  let activeMode = null; // 'sort' | 'delete' | null
 
   cardList.querySelectorAll('.card').forEach(card => {
     const handle = document.createElement('span');
@@ -170,51 +208,6 @@ if (cardList) {
     }).catch(() => {});
   }
 
-  // === MENU & MODI ===
-
-  const menuBtn = document.getElementById('nav-menu-btn');
-  const menuDropdown = document.getElementById('nav-menu-dropdown');
-
-  function enterMode(m) {
-    activeMode = m;
-    cardList.classList.add(m + '-mode');
-    menuBtn.textContent = 'fertig';
-    menuBtn.classList.add('sort-active');
-  }
-
-  function exitMode() {
-    cardList.classList.remove(activeMode + '-mode');
-    activeMode = null;
-    menuBtn.textContent = '⋯';
-    menuBtn.classList.remove('sort-active');
-  }
-
-  if (menuBtn) {
-    menuBtn.addEventListener('pointerdown', (e) => {
-      e.stopPropagation();
-      if (activeMode) {
-        exitMode();
-      } else {
-        menuDropdown.hidden = !menuDropdown.hidden;
-      }
-    });
-  }
-
-  document.getElementById('menu-sort')?.addEventListener('click', () => {
-    menuDropdown.hidden = true;
-    enterMode('sort');
-  });
-
-  document.getElementById('menu-delete')?.addEventListener('click', () => {
-    menuDropdown.hidden = true;
-    enterMode('delete');
-  });
-
-  document.addEventListener('pointerdown', (e) => {
-    if (!menuDropdown.hidden && !menuDropdown.contains(e.target) && e.target !== menuBtn) {
-      menuDropdown.hidden = true;
-    }
-  }, { capture: true });
 }
 
 // === TAP / EDIT ===
@@ -422,12 +415,17 @@ if (navSearchToggle && searchBar) {
     }
   });
 
-  navSearchToggle.addEventListener('click', () => {
+  navSearchToggle?.addEventListener('click', () => {
     if (!searchBar.hidden) {
       closeSearch();
     } else {
       openSearch();
     }
+  });
+
+  document.getElementById('menu-search')?.addEventListener('click', () => {
+    if (menuDropdown) menuDropdown.hidden = true;
+    openSearch();
   });
 
   document.addEventListener('keydown', (e) => {

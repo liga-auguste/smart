@@ -5,19 +5,11 @@
 
 {% block main_class %}main--cards{% endblock %}
 
-{% block nav_extra %}
-<button type="button" class="nav-search-toggle" id="nav-search-toggle" title="suchen">
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-    <circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.3"/>
-    <line x1="8.7" y1="8.7" x2="12.5" y2="12.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-  </svg>
-</button>
+{% block nav_menu_items %}
+<button type="button" class="nav-menu-item" id="menu-search">suchen</button>
 {% if alle %}
-<button type="button" class="nav-link nav-menu-btn" id="nav-menu-btn">⋯</button>
-<div class="nav-menu-dropdown" id="nav-menu-dropdown" hidden>
-  <button type="button" class="nav-menu-item" id="menu-sort">sortieren</button>
-  <button type="button" class="nav-menu-item" id="menu-delete">löschen</button>
-</div>
+<button type="button" class="nav-menu-item" id="menu-sort">sortieren</button>
+<button type="button" class="nav-menu-item" id="menu-delete">löschen</button>
 {% endif %}
 {% endblock %}
 

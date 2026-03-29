@@ -31,14 +31,22 @@
       {% endif %}
       <a href="{% url 'compose' %}" class="nav-link">neu</a>
       <span class="nav-spacer"></span>
-      {% block nav_extra %}{% endblock %}
-
-      <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit" class="nav-link nav-logout">raus</button>
-      </form>
+      <button class="theme-toggle" id="theme-toggle" title="theme wechseln">◑</button>
+      <div class="nav-menu-wrap">
+        <button class="nav-menu-btn" id="nav-menu-btn" type="button">⋯</button>
+        <div class="nav-menu-dropdown" id="nav-menu-dropdown" hidden>
+          {% block nav_menu_items %}{% endblock %}
+          <button type="button" class="nav-menu-item" id="menu-about">über</button>
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="nav-menu-item">raus</button>
+          </form>
+        </div>
+      </div>
     {% endif %}
+    {% if not user.is_authenticated %}
     <button class="theme-toggle" id="theme-toggle" title="theme wechseln">◑</button>
+    {% endif %}
   </nav>
 
   <main class="main {% block main_class %}{% endblock %}">
@@ -48,5 +56,38 @@
   <div id="theme-label" class="theme-label"></div>
   <script src="{% static 'js/theme.js' %}"></script>
   {% block scripts %}{% endblock %}
+
+  {% if user.is_authenticated %}
+  <div id="onboarding-overlay" class="onboarding-overlay" hidden>
+
+    <div class="onboarding-slides">
+
+      <div class="onboarding-slide">
+        <p class="onboarding-manifesto">manchmal höre ich etwas,<br>lese etwas, sehe etwas —<br>und will es ausnahmsweise<br>nicht sofort vergessen.<br><br>dafür ist smart shit.</p>
+      </div>
+
+      <div class="onboarding-slide">
+        <span class="nav-logo-img onboarding-logo-img" aria-label="smart"></span>
+        <p class="onboarding-caption">die karten mit dem geballten wissen wohnen hier.</p>
+      </div>
+
+      <div class="onboarding-slide">
+        <p class="onboarding-caption">dein ton.</p>
+        <button class="onboarding-theme-btn" id="onboarding-theme-btn" type="button">◑</button>
+        <span class="onboarding-theme-name" id="onboarding-theme-name"></span>
+        <button class="onboarding-weiter" id="onboarding-weiter" type="button">weiter →</button>
+      </div>
+
+    </div>
+
+    <div class="onboarding-dots">
+      <button class="onboarding-dot" type="button" aria-label="slide 1"></button>
+      <button class="onboarding-dot" type="button" aria-label="slide 2"></button>
+      <button class="onboarding-dot" type="button" aria-label="slide 3"></button>
+    </div>
+
+  </div>
+  <script src="{% static 'js/onboarding.js' %}"></script>
+  {% endif %}
 </body>
 </html>
