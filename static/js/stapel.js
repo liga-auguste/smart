@@ -191,11 +191,29 @@ if (newName && newSave) {
         const row = document.createElement('div');
         row.className = 'stapel-row';
         row.dataset.name = data.name;
-        row.innerHTML = `
-          <a class="stapel-row-name" href="/cards/?alle&stapel=${encodeURIComponent(data.name)}">${data.name}</a>
-          <span class="stapel-row-count">${data.count}</span>
-          <button type="button" class="stapel-row-edit" aria-label="umbenennen">✎</button>
-          <button type="button" class="stapel-row-delete" aria-label="löschen">×</button>`;
+
+        const a = document.createElement('a');
+        a.className = 'stapel-row-name';
+        a.href = `/cards/?alle&stapel=${encodeURIComponent(data.name)}`;
+        a.textContent = data.name;
+
+        const count = document.createElement('span');
+        count.className = 'stapel-row-count';
+        count.textContent = data.count;
+
+        const editBtn = document.createElement('button');
+        editBtn.type = 'button';
+        editBtn.className = 'stapel-row-edit';
+        editBtn.setAttribute('aria-label', 'umbenennen');
+        editBtn.textContent = '✎';
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.className = 'stapel-row-delete';
+        deleteBtn.setAttribute('aria-label', 'löschen');
+        deleteBtn.textContent = '×';
+
+        row.append(a, count, editBtn, deleteBtn);
         newRow.insertAdjacentElement('beforebegin', row);
         initRow(row);
         newName.value = '';
