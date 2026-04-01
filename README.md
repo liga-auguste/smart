@@ -1,4 +1,4 @@
-# smart shit
+# smart sh*t
 
 A minimal personal knowledge base. No spaced repetition, no review system — just a place to store thoughts, quotes, links, and notes you don't want to forget.
 
