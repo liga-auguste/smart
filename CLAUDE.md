@@ -162,7 +162,7 @@ smart/
 
 ## Was noch fehlt
 
-- [ ] Löschen auf Desktop (× beim Hover, CSS bereits vorbereitet)
+— aktuell nichts offen.
 
 ---
 
