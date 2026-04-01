@@ -21,7 +21,7 @@ A minimal personal knowledge base. No spaced repetition, no review system — ju
 
 - **Backend:** Django, SQLite (dev) / PostgreSQL (prod)
 - **Frontend:** Custom CSS, no framework, mobile-first
-- **Fonts:** DM Serif Display + DM Mono (self-hosted)
+- **Fonts:** DM Serif Display + DM Mono (self-hosted, Latin Extended support)
 - **Hosting:** Render
 
 ## Philosophy
