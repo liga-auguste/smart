@@ -1,0 +1,285 @@
+[
+  {
+    "model": "cards.stapel",
+    "pk": 5,
+    "fields": {
+      "name": "Mark Manson",
+      "order": 0,
+      "created_at": "2026-03-30 21:28:15.146826+00",
+      "updated_at": "2026-03-30 21:28:15.146838+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.stapel",
+    "pk": 3,
+    "fields": {
+      "name": "Random",
+      "order": 0,
+      "created_at": "2026-03-29 20:29:26.582946+00",
+      "updated_at": "2026-03-29 20:29:26.582959+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.stapel",
+    "pk": 4,
+    "fields": {
+      "name": "Inspo",
+      "order": 0,
+      "created_at": "2026-03-29 20:44:53.586049+00",
+      "updated_at": "2026-03-29 20:44:53.586059+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.stapel",
+    "pk": 2,
+    "fields": {
+      "name": "Reminders to myself",
+      "order": 0,
+      "created_at": "2026-03-29 20:25:07.010516+00",
+      "updated_at": "2026-03-29 20:25:07.010526+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.stapel",
+    "pk": 6,
+    "fields": {
+      "name": "Good",
+      "order": 0,
+      "created_at": "2026-04-01 16:39:50.310648+00",
+      "updated_at": "2026-04-01 16:39:50.310662+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 15,
+    "fields": {
+      "content": "When life gives you lemons, lean back and squeeze that shit into your eyeballs. Then stare back at life and say, \"Is that all you got, motherfucker?“",
+      "order": 0,
+      "stapel": "Inspo",
+      "created_at": "2026-03-29 01:04:58.759764+00",
+      "updated_at": "2026-03-29 20:45:41.693131+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 26,
+    "fields": {
+      "content": "You don't serve people from your cup, you serve them from the overflow of the cup.",
+      "order": 1,
+      "stapel": "Mark Manson",
+      "created_at": "2026-04-01 14:35:27.480235+00",
+      "updated_at": "2026-04-01 16:36:59.558821+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 17,
+    "fields": {
+      "content": "Boundaries only piss off the people who benefited from you having none.",
+      "order": 2,
+      "stapel": "Mark Manson",
+      "created_at": "2026-03-29 01:05:37.718317+00",
+      "updated_at": "2026-04-01 16:36:51.783438+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 12,
+    "fields": {
+      "content": "It's all on you.",
+      "order": 3,
+      "stapel": "Mark Manson",
+      "created_at": "2026-03-29 01:03:38.060583+00",
+      "updated_at": "2026-04-01 16:37:16.251812+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 6,
+    "fields": {
+      "content": "Most people aren't evil, they 're just stupid. This includes ourselves, too.",
+      "order": 4,
+      "stapel": "Mark Manson",
+      "created_at": "2026-03-25 21:59:16.263006+00",
+      "updated_at": "2026-04-01 16:37:24.131762+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 19,
+    "fields": {
+      "content": "Fear occurs in proportion to importance. The more afraid you are to do something, the more likely it's exactly what you need to do.",
+      "order": 5,
+      "stapel": "Mark Manson",
+      "created_at": "2026-03-29 01:06:18.935139+00",
+      "updated_at": "2026-04-01 16:37:08.450809+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 1,
+    "fields": {
+      "content": "If you wouldn‘t ask for their advice, fuck their criticism.",
+      "order": 6,
+      "stapel": "Mark Manson",
+      "created_at": "2026-03-25 12:05:57.579228+00",
+      "updated_at": "2026-04-01 16:37:39.957256+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 22,
+    "fields": {
+      "content": "5 powerful questions\nHow are you really doing right now?\n\nHow somebody you spent time together or you wish you did?\n\nWhat's something you did recently that brings you joy?\n\nWhat's something that you have been putting off that's draining your energy? \n\nWhat's something new, that you were willing to do during the week?",
+      "order": 8,
+      "stapel": "Reminders to myself",
+      "created_at": "2026-03-29 01:07:51.473399+00",
+      "updated_at": "2026-03-29 20:27:01.592687+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 20,
+    "fields": {
+      "content": "Happiness\nEnjoyment\nSatisfaction\nMeaning",
+      "order": 9,
+      "stapel": "Good",
+      "created_at": "2026-03-29 01:06:48.819185+00",
+      "updated_at": "2026-04-01 16:40:24.525108+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 25,
+    "fields": {
+      "content": "I think, my guardian angel drinks.",
+      "order": 10,
+      "stapel": "",
+      "created_at": "2026-03-30 20:34:24.383434+00",
+      "updated_at": "2026-03-30 20:34:37.396606+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 21,
+    "fields": {
+      "content": "80% signal, 20% noise",
+      "order": 11,
+      "stapel": "",
+      "created_at": "2026-03-29 01:07:03.476916+00",
+      "updated_at": "2026-03-29 01:07:03.476927+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 16,
+    "fields": {
+      "content": "Cost of inaction is often higher than the cost of the wrong action. Always be in motion.",
+      "order": 12,
+      "stapel": "",
+      "created_at": "2026-03-29 01:05:13.531136+00",
+      "updated_at": "2026-03-29 01:05:13.53115+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 14,
+    "fields": {
+      "content": "Schedule your month like this:\n1. One lunch date with a friend.\n2. One full day out in nature.\n3. 24 hours with no social media.\n4. One day doing absolutely nothing.\n5. One day trying something brand new.\n6. One at-home movie night with your family.\n7. One day serving others.\n8. One self-care or pamper day just for yourself.\n9. One day waking up early to watch the sunrise.\n10. One day watching the sunset.\n11. One solo cafe date for yourself.",
+      "order": 13,
+      "stapel": "",
+      "created_at": "2026-03-29 01:04:32.453391+00",
+      "updated_at": "2026-03-29 01:04:44.805349+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 13,
+    "fields": {
+      "content": "Saglabā atvērtu attieksmi.",
+      "order": 14,
+      "stapel": "",
+      "created_at": "2026-03-29 01:03:59.004226+00",
+      "updated_at": "2026-03-29 01:03:59.00424+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 10,
+    "fields": {
+      "content": "You're getting close. That's why it's getting tough.",
+      "order": 15,
+      "stapel": "",
+      "created_at": "2026-03-25 22:11:11.15672+00",
+      "updated_at": "2026-03-25 22:11:11.156729+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 7,
+    "fields": {
+      "content": "A little bit of truth exists in everything; but the whole truth in nothing.",
+      "order": 16,
+      "stapel": "",
+      "created_at": "2026-03-25 22:00:20.611851+00",
+      "updated_at": "2026-03-25 22:00:20.611883+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 5,
+    "fields": {
+      "content": "You are perfect just as you are... But you can always be better.",
+      "order": 17,
+      "stapel": "",
+      "created_at": "2026-03-25 21:42:22.146477+00",
+      "updated_at": "2026-03-25 21:42:22.146487+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 3,
+    "fields": {
+      "content": "Slow productivity\n1. Do fever things\n2. Work at a natural pace\n3. Obsess over quality",
+      "order": 18,
+      "stapel": "",
+      "created_at": "2026-03-25 21:34:34.934998+00",
+      "updated_at": "2026-03-25 21:34:34.935008+00",
+      "user_id": 1
+    }
+  },
+  {
+    "model": "cards.card",
+    "pk": 24,
+    "fields": {
+      "content": "If it’s not hell yes, it a no.",
+      "order": 7,
+      "stapel": "Random",
+      "created_at": "2026-03-29 14:16:11.626119+00",
+      "updated_at": "2026-04-01 16:41:25.067448+00",
+      "user_id": 1
+    }
+  }
+]
