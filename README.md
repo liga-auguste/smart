@@ -4,7 +4,8 @@ A minimal personal knowledge base. No spaced repetition, no review system — ju
 
 **[smart.ligaauguste.de](https://smart.ligaauguste.de)**
 
-![smart shit on mobile](docs/screenshot.png)
+<img width="603" height="1311" alt="IMG_7660" src="https://github.com/user-attachments/assets/784ddd3b-5751-4c3f-89ae-40890f499c7a" />
+
 
 ---
 
