@@ -3,6 +3,7 @@ from django.test import TestCase, override_settings
 from django.contrib.auth.models import User
 from django.urls import reverse
 from .models import Card, Stapel
+from .templatetags.card_tags import linkify
 
 SIMPLE_STORAGES = {
     'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
@@ -205,3 +206,21 @@ class CardListTest(TestCase):
         response = self.client.get(reverse('list'))
         cards = response.context['cards']
         self.assertTrue(all(c.user == self.user for c in cards))
+
+
+class LinkifyTest(TestCase):
+    def test_url_becomes_link(self):
+        result = linkify('check https://example.com out')
+        self.assertIn('<a href="https://example.com"', result)
+
+    def test_plain_text_unchanged(self):
+        result = linkify('kein link hier')
+        self.assertEqual(result, 'kein link hier')
+
+    def test_xss_escaped(self):
+        result = linkify('<script>alert(1)</script>')
+        self.assertNotIn('<script>', result)
+
+    def test_rel_noopener(self):
+        result = linkify('https://example.com')
+        self.assertIn('rel="noopener noreferrer"', result)

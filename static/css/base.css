@@ -931,6 +931,20 @@ body {
   white-space: pre-wrap;
 }
 
+.card-body a {
+  color: var(--fg-muted);
+  text-decoration: none;
+  opacity: 0.6;
+  word-break: break-all;
+}
+
+.card-body a::before { content: '['; }
+.card-body a::after  { content: ']'; }
+
+.card-body a:active {
+  opacity: 1;
+}
+
 .card-time {
   display: none;
 }
