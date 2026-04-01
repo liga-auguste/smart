@@ -978,8 +978,10 @@ body {
 
 .empty-state {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
   flex: 1;
   width: 100%;
 }
@@ -1177,6 +1179,21 @@ a.nav-menu-item {
   font-family: 'DM Mono', monospace;
   font-size: 0.9rem;
   color: var(--fg-muted);
+}
+
+.empty-state-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--bg);
+  background: var(--fg);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 2px;
+  transition: opacity 0.15s;
+}
+
+.empty-state-btn:active {
+  opacity: 0.7;
 }
 
 @keyframes blink {
