@@ -1,4 +1,5 @@
-const isSingleView = !document.querySelector('.card-list--alle');
+const hasCards = !!document.querySelector('.card');
+const isSingleView = !document.querySelector('.card-list--alle') && hasCards;
 const cardList = document.querySelector('.card-list--alle');
 const menuBtn = document.getElementById('nav-menu-btn');
 const menuDropdown = document.getElementById('nav-menu-dropdown');

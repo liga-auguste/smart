@@ -678,7 +678,7 @@ body {
   z-index: 1;
   height: auto;
   scroll-snap-align: none;
-  padding: 1rem 0 1rem 1rem;
+  padding: 1rem 2.5rem 1rem 1rem;
   overflow-y: visible;
   border-right: none;
   border-bottom: 1px solid var(--border);
@@ -734,7 +734,6 @@ body {
 }
 
 .card-list--alle.delete-mode .card {
-  padding-right: 2.5rem;
   cursor: default;
 }
 
@@ -753,6 +752,7 @@ body {
 
 .card-drag-handle {
   display: none;
+  opacity: 0.8;
   position: absolute;
   right: 0.75rem;
   top: 50%;
@@ -766,7 +766,6 @@ body {
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
-  opacity: 0.8;
 }
 
 .card-drag-handle::before {
@@ -783,7 +782,6 @@ body {
 }
 
 .card-list--alle.sort-mode .card {
-  padding-right: 2.5rem;
   cursor: default;
 }
 
