@@ -55,6 +55,7 @@
 
   <div id="theme-label" class="theme-label"></div>
   <div id="stapel-label" class="stapel-label"></div>
+  <script>window.__userId = {{ user.id|default:'null' }};</script>
   <script src="{% static 'js/theme.js' %}"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {

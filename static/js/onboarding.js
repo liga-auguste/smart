@@ -1,5 +1,5 @@
 (function () {
-  const STORAGE_KEY = 'onboarding_seen';
+  const STORAGE_KEY = `onboarding_seen_${window.__userId || ''}`;
   const THEMES = ['nacht', 'tageslicht', 'farbe', 'nebel', 'sand', 'wald', 'rost', 'grau', 'bunt', 'karpaten'];
   const THEME_NAMES = {
     nacht:      'ich bin normal.',
