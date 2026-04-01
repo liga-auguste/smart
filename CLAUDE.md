@@ -162,7 +162,7 @@ smart/
 
 ## Was noch fehlt
 
-— aktuell nichts offen.
+— nichts. Die App ist feature-complete.
 
 ---
 
