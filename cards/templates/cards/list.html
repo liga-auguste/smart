@@ -8,6 +8,7 @@
 {% block nav_menu_items %}
 <button type="button" class="nav-menu-item" id="menu-search">suchen</button>
 <a href="{% url 'stapel' %}" class="nav-menu-item">stapel</a>
+<a href="{% url 'list' %}?zufaellig=1" class="nav-menu-item{% if zufaellig %} nav-menu-item--active{% endif %}">zufällig</a>
 {% if alle %}
 <button type="button" class="nav-menu-item" id="menu-sort">sortieren</button>
 <button type="button" class="nav-menu-item" id="menu-delete">löschen</button>
@@ -29,32 +30,71 @@
 </div>
 {% endif %}
 
-<div class="card-list{% if alle %} card-list--alle{% endif %}" data-stapel-list="{{ stapel_list|join:'|' }}">
-  {% if not cards %}
-    {% if q or stapel %}
-    <div class="empty-state">
-      <span class="empty-state-label">nichts gefunden.</span>
+{% if alle and not q %}
+<div class="filter-chips">
+  <a href="{% url 'list' %}?alle" class="filter-chip{% if not stapel and not ohne_stapel and not zufaellig %} filter-chip--active{% endif %}">alle</a>
+  {% for s in stapel_list %}
+  <a href="{% url 'list' %}?alle&amp;stapel={{ s|urlencode }}" class="filter-chip{% if stapel == s %} filter-chip--active{% endif %}">{{ s }}</a>
+  {% endfor %}
+  <a href="{% url 'list' %}?alle&amp;ohne_stapel=1" class="filter-chip{% if ohne_stapel %} filter-chip--active{% endif %}">kein stapel</a>
+</div>
+{% endif %}
+
+<div class="card-list{% if alle %} card-list--alle{% endif %}" data-stapel-list="{{ stapel_list|join:'|' }}"{% if zufaellig %} data-zufaellig="1"{% endif %}>
+  {% if cards_grouped %}
+    {% for stapel_name, stapel_cards in cards_grouped %}
+    {% if stapel_cards %}
+    <div class="stapel-section" data-prerendered="true" data-stapel="{{ stapel_name }}">
+      <h3 class="stapel-section-header">{{ stapel_name|default:"kein stapel" }}</h3>
+      {% for card in stapel_cards %}
+      <article class="card" id="card-{{ card.id }}" data-id="{{ card.id }}" data-stapel="{{ card.stapel }}">
+        <div class="card-display">
+          <div class="card-headline">{{ card.content|headline }}</div>
+          {% with rest=card.content|body %}{% if rest %}
+          <div class="card-body">{{ rest }}</div>
+          {% endif %}{% endwith %}
+        </div>
+        <time class="card-time" datetime="{{ card.created_at|date:'c' }}">{{ card.created_at|date:'d.m.Y' }}</time>
+      </article>
+      {% endfor %}
     </div>
-    {% else %}
+    {% endif %}
+    {% empty %}
     <div class="empty-state">
       <a href="{% url 'compose' %}" class="cursor" aria-label="neue karte"></a>
     </div>
-    {% endif %}
-  {% else %}
-    {% for card in cards %}
-    <article class="card" id="card-{{ card.id }}" data-id="{{ card.id }}" data-stapel="{{ card.stapel }}">
-      {% if card.stapel %}<span class="card-stapel">{{ card.stapel }}</span>{% endif %}
-      <div class="card-display">
-        <div class="card-headline">{{ card.content|headline }}</div>
-        {% with rest=card.content|body %}{% if rest %}
-        <div class="card-body">{{ rest }}</div>
-        {% endif %}{% endwith %}
-      </div>
-<time class="card-time" datetime="{{ card.created_at|date:'c' }}">
-        {{ card.created_at|date:'d.m.Y' }}
-      </time>
-    </article>
     {% endfor %}
+  {% else %}
+    {% if not cards %}
+      {% if q or stapel or ohne_stapel %}
+      <div class="empty-state">
+        <span class="empty-state-label">nichts gefunden.</span>
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <a href="{% url 'compose' %}" class="cursor" aria-label="neue karte"></a>
+      </div>
+      {% endif %}
+    {% else %}
+      {% for card in cards %}
+      <article class="card" id="card-{{ card.id }}" data-id="{{ card.id }}" data-stapel="{{ card.stapel }}">
+        {% if card.stapel %}<span class="card-stapel">{{ card.stapel }}</span>{% endif %}
+        <div class="card-display">
+          <div class="card-headline">{{ card.content|headline }}</div>
+          {% with rest=card.content|body %}{% if rest %}
+          <div class="card-body">{{ rest }}</div>
+          {% endif %}{% endwith %}
+        </div>
+        <time class="card-time" datetime="{{ card.created_at|date:'c' }}">{{ card.created_at|date:'d.m.Y' }}</time>
+      </article>
+      {% endfor %}
+      {% if not alle %}
+      <div class="card card--end">
+        <span class="card-end-label">hier ist nichts mehr.</span>
+        <button type="button" class="card-end-back" id="card-end-back">↑ zurück zur ersten</button>
+      </div>
+      {% endif %}
+    {% endif %}
   {% endif %}
 </div>
 {% endblock %}

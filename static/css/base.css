@@ -158,7 +158,7 @@ body {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: left center;
-  opacity: 0.6;
+  opacity: 0.75;
   transition: opacity 0.15s;
   background-image: url('../icons/smart_logo_nacht.png');
 }
@@ -181,31 +181,24 @@ body {
   flex: 1;
 }
 
-.nav-stapel {
+.stapel-label {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
   font-family: 'DM Mono', monospace;
   font-size: 0.75rem;
   color: var(--fg-muted);
-  letter-spacing: 0.04em;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 0.15rem 0.55rem;
   opacity: 0;
-  transition: opacity 0.2s;
-  cursor: pointer;
-  text-decoration: none;
-  white-space: nowrap;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  letter-spacing: 0.04em;
+  z-index: 50;
 }
 
-.nav-stapel:not(:empty) {
+.stapel-label.visible {
   opacity: 1;
 }
 
-.nav-stapel--active {
-  color: var(--fg);
-  border-color: var(--fg);
-  text-decoration: none;
-  cursor: pointer;
-}
 
 .theme-toggle {
   background: none;
@@ -534,6 +527,7 @@ body {
   opacity: 0;
   transition: opacity 0.3s;
   pointer-events: none;
+  z-index: 50;
 }
 
 .theme-label.visible {
@@ -588,6 +582,80 @@ body {
   position: relative;
 }
 
+/* === FILTER CHIPS === */
+
+.filter-chips {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.75rem 1.5rem;
+  overflow-x: auto;
+  white-space: nowrap;
+  max-width: 680px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.filter-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-chip {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+  letter-spacing: 0.04em;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+
+.filter-chip:hover {
+  color: var(--fg);
+  border-color: var(--fg);
+}
+
+.filter-chip--active {
+  color: var(--fg);
+  border-color: var(--fg);
+}
+
+/* === STAPEL SECTIONS (gruppierte Übersicht) === */
+
+.stapel-section {
+  width: 100%;
+  padding-bottom: 0.75rem;
+}
+
+.stapel-section-header {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  letter-spacing: 0.03em;
+  font-weight: 400;
+  margin: 1.5rem 0 0.25rem;
+  padding: 0;
+}
+
+.stapel-section:first-child .stapel-section-header {
+  margin-top: 0.5rem;
+}
+
+.stapel-section--sort-empty {
+  min-height: 2.5rem;
+  border: 1px dashed var(--border);
+  margin-bottom: 0.25rem;
+}
+
+.stapel-section.section-drag-over {
+  outline: 1px dashed var(--accent);
+  outline-offset: 2px;
+}
+
 /* === CARD LIST — ALLE (vertikal) === */
 
 .card-list--alle {
@@ -610,7 +678,7 @@ body {
   z-index: 1;
   height: auto;
   scroll-snap-align: none;
-  padding: 1.5rem 0 1.5rem 1rem;
+  padding: 1rem 0 1rem 1rem;
   overflow-y: visible;
   border-right: none;
   border-bottom: 1px solid var(--border);
@@ -744,6 +812,7 @@ body {
 .nav-menu-btn.sort-active {
   color: var(--accent);
   letter-spacing: normal;
+  font-size: 0.8rem;
 }
 
 .nav-menu-wrap {
@@ -869,6 +938,42 @@ body {
 }
 
 
+/* === END CARD === */
+
+.card--end {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  pointer-events: none;
+}
+
+.card-end-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  opacity: 0.5;
+  letter-spacing: 0.04em;
+}
+
+.card-end-back {
+  margin-top: 1.5rem;
+  background: none;
+  border: none;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  padding: 0;
+  pointer-events: auto;
+  transition: color 0.15s;
+}
+
+.card-end-back:hover {
+  color: var(--fg);
+}
+
 /* === EMPTY STATE === */
 
 .empty-state {
@@ -929,43 +1034,6 @@ a.nav-menu-item {
   padding: 1rem 1.5rem;
 }
 
-.stapel-row--new .stapel-row-name {
-  background: none;
-  border: none;
-  border-bottom: 1px solid transparent;
-  padding: 0;
-  width: 100%;
-  color: var(--fg);
-  opacity: 0.4;
-}
-
-.stapel-row--new .stapel-row-name:focus {
-  outline: none;
-  border-bottom-color: var(--accent);
-  opacity: 1;
-}
-
-.stapel-row--new .stapel-row-name::placeholder {
-  color: var(--fg-muted);
-  opacity: 1;
-}
-
-.stapel-row-save {
-  background: none;
-  border: none;
-  font-family: 'DM Mono', monospace;
-  font-size: 0.8rem;
-  color: var(--fg-muted);
-  cursor: pointer;
-  padding: 0.25rem 0.4rem;
-  white-space: nowrap;
-  touch-action: manipulation;
-}
-
-.stapel-row-save:hover {
-  color: var(--fg);
-}
-
 .stapel-empty {
   font-family: 'DM Mono', monospace;
   font-size: 0.9rem;
@@ -986,13 +1054,18 @@ a.nav-menu-item {
   font-family: 'DM Serif Display', serif;
   font-size: 1.2rem;
   color: var(--fg);
+  text-decoration: none;
   outline: none;
-  cursor: pointer;
+}
+
+.stapel-row-name:hover {
+  opacity: 0.7;
 }
 
 .stapel-row.renaming .stapel-row-name {
   border-bottom: 1px solid var(--accent);
   cursor: text;
+  opacity: 1;
 }
 
 .stapel-row-count {
@@ -1001,19 +1074,102 @@ a.nav-menu-item {
   color: var(--fg-muted);
 }
 
+.stapel-row-handle {
+  color: var(--fg-muted);
+  font-size: 0.9rem;
+  cursor: grab;
+  padding: 0 0.1rem;
+  opacity: 0;
+  transition: opacity 0.15s;
+  touch-action: none;
+  user-select: none;
+}
+
+.stapel-row:hover .stapel-row-handle {
+  opacity: 0.5;
+}
+
+.stapel-row.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  background: var(--bg);
+}
+
+.stapel-row-placeholder {
+  border-bottom: 2px solid var(--accent);
+  margin: -1px 0 0;
+}
+
+.stapel-row-edit,
 .stapel-row-delete {
   background: none;
   border: none;
   color: var(--fg-muted);
-  font-family: 'DM Mono', monospace;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
-  padding: 0.25rem 0.4rem;
+  padding: 0.25rem 0.3rem;
   transition: color 0.15s;
   touch-action: manipulation;
+  opacity: 0;
 }
 
+.stapel-row:hover .stapel-row-edit,
+.stapel-row:hover .stapel-row-delete,
+.stapel-row.renaming .stapel-row-edit {
+  opacity: 1;
+}
+
+.stapel-row-edit:hover,
 .stapel-row-delete:hover {
+  color: var(--fg);
+}
+
+/* Neuer Stapel */
+
+.stapel-row--new {
+  border-bottom: none;
+  margin-top: 0.5rem;
+}
+
+.stapel-new-input {
+  flex: 1;
+  background: none;
+  border: none;
+  border-bottom: 1px solid transparent;
+  padding: 0;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.2rem;
+  color: var(--fg);
+  opacity: 0.4;
+  transition: opacity 0.15s, border-color 0.15s;
+}
+
+.stapel-new-input:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+  opacity: 1;
+}
+
+.stapel-new-input::placeholder {
+  color: var(--fg-muted);
+  opacity: 1;
+}
+
+.stapel-row-save {
+  background: none;
+  border: none;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  cursor: pointer;
+  padding: 0.25rem 0.4rem;
+  white-space: nowrap;
+  touch-action: manipulation;
+  transition: color 0.15s;
+}
+
+.stapel-row-save:hover {
   color: var(--fg);
 }
 

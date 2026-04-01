@@ -10,15 +10,17 @@
   {% else %}
   {% for s in stapel_rows %}
   <div class="stapel-row" data-name="{{ s.stapel }}">
-    <span class="stapel-row-name">{{ s.stapel }}</span>
+    <span class="stapel-row-handle">⠿</span>
+    <a class="stapel-row-name" href="/cards/?alle&amp;stapel={{ s.stapel|urlencode }}">{{ s.stapel }}</a>
     <span class="stapel-row-count">{{ s.count }}</span>
-    <button type="button" class="stapel-row-delete">×</button>
+    <button type="button" class="stapel-row-edit" aria-label="umbenennen">✎</button>
+    <button type="button" class="stapel-row-delete" aria-label="löschen">×</button>
   </div>
   {% endfor %}
   {% endif %}
 
   <div class="stapel-row stapel-row--new" id="stapel-row-new">
-    <input type="text" class="stapel-row-name" id="stapel-new-name" placeholder="neuer stapel" autocomplete="off" spellcheck="false">
+    <input type="text" class="stapel-new-input" id="stapel-new-name" placeholder="neuer stapel …" autocomplete="off" spellcheck="false">
     <button type="button" class="stapel-row-save" id="stapel-new-save" hidden>speichern</button>
   </div>
 </div>

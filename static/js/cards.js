@@ -4,6 +4,8 @@ const menuBtn = document.getElementById('nav-menu-btn');
 const menuDropdown = document.getElementById('nav-menu-dropdown');
 let activeMode = null;
 
+window.__menuModeActive = () => !!activeMode;
+
 function enterMode(m) {
   if (!cardList) return;
   activeMode = m;
@@ -22,6 +24,24 @@ function exitMode() {
 }
 
 function buildSortGroups() {
+  if (cardList.querySelector('.stapel-section[data-prerendered]')) {
+    const existingStapel = new Set([...cardList.querySelectorAll('.stapel-section')].map(s => s.dataset.stapel));
+    const allStapel = (cardList.dataset.stapelList || '').split('|').filter(Boolean);
+    const keinStapelSection = [...cardList.querySelectorAll('.stapel-section')].find(s => s.dataset.stapel === '');
+    allStapel.forEach(name => {
+      if (existingStapel.has(name)) return;
+      const section = document.createElement('div');
+      section.className = 'stapel-section stapel-section--sort-empty';
+      section.dataset.stapel = name;
+      const header = document.createElement('div');
+      header.className = 'stapel-section-header';
+      header.textContent = name;
+      section.appendChild(header);
+      if (keinStapelSection) cardList.insertBefore(section, keinStapelSection);
+      else cardList.appendChild(section);
+    });
+    return;
+  }
   const cards = [...cardList.querySelectorAll('.card')];
   const stapelValues = [...new Set(cards.map(c => c.dataset.stapel || ''))];
   if (stapelValues.length <= 1) return;
@@ -49,6 +69,10 @@ function buildSortGroups() {
 }
 
 function teardownSortGroups() {
+  if (cardList.querySelector('.stapel-section[data-prerendered]')) {
+    cardList.querySelectorAll('.stapel-section--sort-empty').forEach(s => s.remove());
+    return;
+  }
   const sections = [...cardList.querySelectorAll('.stapel-section')];
   if (!sections.length) return;
   const cards = [...cardList.querySelectorAll('.card')];
@@ -56,21 +80,11 @@ function teardownSortGroups() {
   cards.forEach(c => cardList.appendChild(c));
 }
 
-if (menuBtn && menuDropdown) {
+if (menuBtn) {
   menuBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (activeMode) {
-      exitMode();
-    } else {
-      menuDropdown.hidden = !menuDropdown.hidden;
-    }
+    if (activeMode) exitMode();
   });
-
-  document.addEventListener('pointerdown', (e) => {
-    if (!menuDropdown.hidden && !menuDropdown.contains(e.target) && !e.target.closest('.nav-menu-wrap')) {
-      menuDropdown.hidden = true;
-    }
-  }, { capture: true });
 }
 
 document.getElementById('menu-sort')?.addEventListener('click', () => { enterMode('sort'); });
@@ -80,29 +94,54 @@ document.getElementById('menu-delete')?.addEventListener('click', () => { enterM
 if (isSingleView) {
   document.body.classList.add('single-view');
 
-  const navStapel = document.getElementById('nav-stapel');
-
-  if (navStapel && !navStapel.classList.contains('nav-stapel--active')) {
-    navStapel.style.cursor = 'pointer';
-    navStapel.addEventListener('click', () => {
-      const s = navStapel.textContent.trim();
-      if (s) window.location.href = `/cards/?stapel=${encodeURIComponent(s)}`;
-    });
-  }
+  const stapelLabel = document.getElementById('stapel-label');
+  const isZufaellig = !!document.querySelector('.card-list[data-zufaellig]');
+  let stapelLabelTimer = null;
+  let lastSeenStapel = null;
+  let currentStapel = '';
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       e.target.classList.toggle('in-view', e.isIntersecting);
       if (e.isIntersecting) {
         localStorage.setItem('lastCard', e.target.id);
-        if (navStapel && !navStapel.classList.contains('nav-stapel--active')) {
-          navStapel.textContent = e.target.dataset.stapel || '';
+        currentStapel = e.target.dataset.stapel || '';
+        if (!isZufaellig && stapelLabel) {
+          const s = currentStapel;
+          if (s !== lastSeenStapel) {
+            lastSeenStapel = s;
+            stapelLabel.textContent = s;
+            if (s) {
+              stapelLabel.classList.add('visible');
+              clearTimeout(stapelLabelTimer);
+              stapelLabelTimer = setTimeout(() => stapelLabel.classList.remove('visible'), 1800);
+            } else {
+              stapelLabel.classList.remove('visible');
+            }
+          }
         }
       }
     });
   }, { threshold: 0.5 });
 
+  if (isZufaellig && stapelLabel) {
+    new MutationObserver(() => {
+      if (document.body.classList.contains('nav-visible')) {
+        stapelLabel.textContent = currentStapel;
+        if (currentStapel) stapelLabel.classList.add('visible');
+      } else {
+        stapelLabel.classList.remove('visible');
+      }
+    }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  }
+
   document.querySelectorAll('.card').forEach(c => observer.observe(c));
+
+  document.getElementById('card-end-back')?.addEventListener('click', () => {
+    const list = document.querySelector('.card-list');
+    const firstCard = list?.querySelector('.card');
+    if (firstCard) firstCard.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+  });
 
   // Zur Karte aus Hash scrollen
   if (location.hash) {
@@ -194,11 +233,24 @@ if (cardList) {
     ghost.style.top = `${e.clientY - offsetY}px`;
 
     ghost.style.visibility = 'hidden';
-    const target = document.elementFromPoint(e.clientX, e.clientY)?.closest('.card-list--alle .card');
+    const el = document.elementFromPoint(e.clientX, e.clientY);
     ghost.style.visibility = '';
 
+    const cardTarget = el?.closest('.card-list--alle .card');
+    let sectionTarget = !cardTarget ? el?.closest('.card-list--alle .stapel-section') : null;
+    if (!cardTarget && !sectionTarget && el?.closest('.card-list--alle')) {
+      const sections = [...cardList.querySelectorAll('.stapel-section')];
+      if (sections.length) sectionTarget = sections[sections.length - 1];
+    }
+
     cardList.querySelectorAll('.card').forEach(c => c.classList.remove('drag-over'));
-    if (target && target !== dragged) target.classList.add('drag-over');
+    cardList.querySelectorAll('.stapel-section').forEach(s => s.classList.remove('section-drag-over'));
+
+    if (cardTarget && cardTarget !== dragged) {
+      cardTarget.classList.add('drag-over');
+    } else if (sectionTarget) {
+      sectionTarget.classList.add('section-drag-over');
+    }
   }, { passive: false });
 
   document.addEventListener('pointerup', onUp);
@@ -238,7 +290,10 @@ if (cardList) {
         dragged.classList.remove('dragging');
         document.body.style.userSelect = '';
         const target = cardList.querySelector('.card.drag-over');
+        const sectionTarget = cardList.querySelector('.stapel-section.section-drag-over');
         cardList.querySelectorAll('.card').forEach(c => c.classList.remove('drag-over'));
+        cardList.querySelectorAll('.stapel-section').forEach(s => s.classList.remove('section-drag-over'));
+
         if (target && target !== dragged) {
           const draggedStapel = dragged.dataset.stapel || '';
           const targetStapel = target.dataset.stapel || '';
@@ -251,6 +306,15 @@ if (cardList) {
           const cards = [...cardList.querySelectorAll('.card')];
           if (cards.indexOf(dragged) < cards.indexOf(target)) target.after(dragged);
           else target.before(dragged);
+          saveOrder();
+        } else if (sectionTarget) {
+          const targetStapel = sectionTarget.dataset.stapel ?? '';
+          const draggedStapel = dragged.dataset.stapel || '';
+          if (draggedStapel !== targetStapel) {
+            dragged.dataset.stapel = targetStapel;
+            updateCardStapel(dragged, targetStapel);
+          }
+          sectionTarget.appendChild(dragged);
           saveOrder();
         }
         dragged = null;

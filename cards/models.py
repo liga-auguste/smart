@@ -13,10 +13,11 @@ class UserOwnedModel(models.Model):
 
 class Stapel(UserOwnedModel):
     name = models.CharField(max_length=100)
+    order = models.PositiveIntegerField(default=0)
 
     class Meta:
         unique_together = [('user', 'name')]
-        ordering = ['name']
+        ordering = ['order', 'name']
 
     def __str__(self):
         return self.name

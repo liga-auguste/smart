@@ -31,12 +31,6 @@
       {% endif %}
       <a href="{% url 'compose' %}" class="nav-link">neu</a>
       <span class="nav-spacer"></span>
-      {% if stapel %}
-      <a href="{% url 'list' %}" class="nav-stapel nav-stapel--active" id="nav-stapel">{{ stapel }} ×</a>
-      {% else %}
-      <span class="nav-stapel" id="nav-stapel"></span>
-      {% endif %}
-      <span class="nav-spacer"></span>
       <button class="theme-toggle" id="theme-toggle" title="theme wechseln">◑</button>
       <div class="nav-menu-wrap">
         <button class="nav-menu-btn" id="nav-menu-btn" type="button">⋯</button>
@@ -60,7 +54,25 @@
   </main>
 
   <div id="theme-label" class="theme-label"></div>
+  <div id="stapel-label" class="stapel-label"></div>
   <script src="{% static 'js/theme.js' %}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('nav-menu-btn');
+      const dd = document.getElementById('nav-menu-dropdown');
+      if (!btn || !dd) return;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (window.__menuModeActive && window.__menuModeActive()) return;
+        dd.hidden = !dd.hidden;
+      });
+      document.addEventListener('pointerdown', (e) => {
+        if (!dd.hidden && !dd.contains(e.target) && !e.target.closest('.nav-menu-wrap')) {
+          dd.hidden = true;
+        }
+      }, { capture: true });
+    });
+  </script>
   {% block scripts %}{% endblock %}
 
   {% if user.is_authenticated %}

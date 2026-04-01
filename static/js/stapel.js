@@ -1,10 +1,17 @@
+function getCookie(name) {
+  for (const c of document.cookie.split(';')) {
+    const [k, v] = c.trim().split('=');
+    if (k === name) return decodeURIComponent(v);
+  }
+  return '';
+}
+
 function initRow(row) {
   const nameEl = row.querySelector('.stapel-row-name');
+  const editBtn = row.querySelector('.stapel-row-edit');
   const deleteBtn = row.querySelector('.stapel-row-delete');
   let originalName = row.dataset.name;
-  let lastTap = 0;
   let blurTimer = null;
-  let navTimer = null;
 
   function enterRename() {
     row.classList.add('renaming');
@@ -32,22 +39,17 @@ function initRow(row) {
     }).then(() => {
       originalName = newName;
       row.dataset.name = newName;
+      nameEl.href = `/cards/?alle&stapel=${encodeURIComponent(newName)}`;
     }).catch(() => { nameEl.textContent = originalName; });
   }
 
-  nameEl.addEventListener('pointerup', (e) => {
-    if (row.classList.contains('renaming')) return;
-    const now = Date.now();
-    if (now - lastTap < 300) {
-      lastTap = 0;
-      clearTimeout(navTimer);
-      enterRename();
+  editBtn.addEventListener('pointerdown', (e) => e.preventDefault());
+  editBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (row.classList.contains('renaming')) {
+      exitRename(false);
     } else {
-      lastTap = now;
-      clearTimeout(navTimer);
-      navTimer = setTimeout(() => {
-        window.location.href = `/cards/?stapel=${encodeURIComponent(originalName)}`;
-      }, 300);
+      enterRename();
     }
   });
 
@@ -62,7 +64,6 @@ function initRow(row) {
 
   deleteBtn.addEventListener('pointerdown', (e) => e.preventDefault());
   deleteBtn.addEventListener('click', () => {
-    clearTimeout(blurTimer);
     if (!confirm(`„${originalName}" löschen? Die Karten bleiben erhalten.`)) return;
     fetch('/api/stapel/delete/', {
       method: 'POST',
@@ -77,6 +78,102 @@ function initRow(row) {
 }
 
 document.querySelectorAll('.stapel-row:not(.stapel-row--new)').forEach(initRow);
+
+// === DRAG & DROP ===
+
+const wrap = document.querySelector('.stapel-list-wrap');
+let dragRow = null;
+let dragStartY = 0;
+let dragOffsetY = 0;
+let placeholder = null;
+
+function getRows() {
+  return [...wrap.querySelectorAll('.stapel-row:not(.stapel-row--new)')];
+}
+
+function saveOrder() {
+  const names = getRows().map(r => r.dataset.name);
+  fetch('/api/stapel/reorder/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+    body: JSON.stringify({ names }),
+  }).catch(() => {});
+}
+
+wrap.addEventListener('pointerdown', (e) => {
+  const handle = e.target.closest('.stapel-row-handle');
+  if (!handle) return;
+  const row = handle.closest('.stapel-row');
+  if (!row) return;
+
+  e.preventDefault();
+  dragRow = row;
+  dragStartY = e.clientY;
+
+  const rect = row.getBoundingClientRect();
+  dragOffsetY = e.clientY - rect.top;
+
+  placeholder = document.createElement('div');
+  placeholder.className = 'stapel-row-placeholder';
+  placeholder.style.height = rect.height + 'px';
+  row.insertAdjacentElement('afterend', placeholder);
+
+  row.style.position = 'fixed';
+  row.style.top = rect.top + 'px';
+  row.style.left = rect.left + 'px';
+  row.style.width = rect.width + 'px';
+  row.style.zIndex = '100';
+  row.classList.add('dragging');
+
+  wrap.setPointerCapture(e.pointerId);
+});
+
+wrap.addEventListener('pointermove', (e) => {
+  if (!dragRow) return;
+  const y = e.clientY - dragOffsetY;
+  dragRow.style.top = y + 'px';
+
+  const rows = getRows().filter(r => r !== dragRow);
+  let inserted = false;
+  for (const r of rows) {
+    const rect = r.getBoundingClientRect();
+    if (e.clientY < rect.top + rect.height / 2) {
+      r.insertAdjacentElement('beforebegin', placeholder);
+      inserted = true;
+      break;
+    }
+  }
+  if (!inserted && rows.length) {
+    rows[rows.length - 1].insertAdjacentElement('afterend', placeholder);
+  }
+});
+
+wrap.addEventListener('pointerup', () => {
+  if (!dragRow) return;
+  dragRow.style.position = '';
+  dragRow.style.top = '';
+  dragRow.style.left = '';
+  dragRow.style.width = '';
+  dragRow.style.zIndex = '';
+  dragRow.classList.remove('dragging');
+  placeholder.replaceWith(dragRow);
+  placeholder = null;
+  saveOrder();
+  dragRow = null;
+});
+
+wrap.addEventListener('pointercancel', () => {
+  if (!dragRow) return;
+  dragRow.style.position = '';
+  dragRow.style.top = '';
+  dragRow.style.left = '';
+  dragRow.style.width = '';
+  dragRow.style.zIndex = '';
+  dragRow.classList.remove('dragging');
+  placeholder?.remove();
+  placeholder = null;
+  dragRow = null;
+});
 
 const newRow = document.getElementById('stapel-row-new');
 const newName = document.getElementById('stapel-new-name');
@@ -94,14 +191,17 @@ if (newName && newSave) {
         const row = document.createElement('div');
         row.className = 'stapel-row';
         row.dataset.name = data.name;
-        row.innerHTML = `<span class="stapel-row-name">${data.name}</span><span class="stapel-row-count">${data.count}</span><button type="button" class="stapel-row-delete">×</button>`;
+        row.innerHTML = `
+          <a class="stapel-row-name" href="/cards/?alle&stapel=${encodeURIComponent(data.name)}">${data.name}</a>
+          <span class="stapel-row-count">${data.count}</span>
+          <button type="button" class="stapel-row-edit" aria-label="umbenennen">✎</button>
+          <button type="button" class="stapel-row-delete" aria-label="löschen">×</button>`;
         newRow.insertAdjacentElement('beforebegin', row);
         initRow(row);
         newName.value = '';
         newSave.hidden = true;
         newName.blur();
-        const empty = document.querySelector('.stapel-empty');
-        if (empty) empty.remove();
+        document.querySelector('.stapel-empty')?.remove();
       }
     });
   }
@@ -109,20 +209,10 @@ if (newName && newSave) {
   newName.addEventListener('input', () => {
     newSave.hidden = !newName.value.trim();
   });
-
   newName.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') { e.preventDefault(); submitNew(); }
     if (e.key === 'Escape') { newName.value = ''; newSave.hidden = true; newName.blur(); }
   });
-
   newSave.addEventListener('mousedown', (e) => e.preventDefault());
   newSave.addEventListener('click', submitNew);
-}
-
-function getCookie(name) {
-  for (const c of document.cookie.split(';')) {
-    const [k, v] = c.trim().split('=');
-    if (k === name) return decodeURIComponent(v);
-  }
-  return '';
 }
