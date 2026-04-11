@@ -6,6 +6,10 @@ A minimal personal knowledge base. No spaced repetition, no review system — ju
 
 <img width="603" height="1311" alt="IMG_7665" src="https://github.com/user-attachments/assets/98105d8d-2b60-428e-9ba1-1d4897a6d2ae" />
 
+## Demo-Login
+> **Username:** `demo`  
+> **Password:** `demo1234`
+
 ---
 
 ## What it does
