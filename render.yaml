@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: smart
+    runtime: python
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate
+    startCommand: gunicorn config.wsgi:application
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: smartshit
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.13.0
+
+  - type: cron
+    name: reset-demo-data
+    runtime: python
+    schedule: "0 3 * * *"
+    buildCommand: pip install -r requirements.txt
+    startCommand: python manage.py create_demo_data
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: smartshit
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.13.0
