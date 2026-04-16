@@ -26,6 +26,9 @@ services:
           name: smartshit
           property: connectionString
       - key: SECRET_KEY
-        generateValue: true
+        fromService:
+          name: smart
+          type: web
+          envVarKey: SECRET_KEY
       - key: PYTHON_VERSION
         value: 3.13.0
