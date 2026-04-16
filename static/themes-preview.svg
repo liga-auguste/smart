@@ -1,0 +1,93 @@
+<svg viewBox="0 0 840 148" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;display:block;">
+
+  <!-- nacht -->
+  <rect x="6" y="4" width="72" height="110" rx="8" fill="#111111"/>
+  <rect x="15" y="28" width="36" height="7" rx="2" fill="#e8e4dc"/>
+  <rect x="15" y="42" width="28" height="4" rx="1.5" fill="#6b6660"/>
+  <rect x="15" y="51" width="33" height="4" rx="1.5" fill="#6b6660"/>
+  <rect x="15" y="60" width="20" height="4" rx="1.5" fill="#6b6660"/>
+  <rect x="15" y="74" width="14" height="3" rx="1.5" fill="#c8b89a"/>
+  <text x="42" y="130" font-size="8.5" text-anchor="middle" fill="#888" font-family="monospace">nacht</text>
+
+  <!-- tageslicht -->
+  <rect x="90" y="4" width="72" height="110" rx="8" fill="#f5f2ed"/>
+  <rect x="99" y="28" width="36" height="7" rx="2" fill="#1a1714"/>
+  <rect x="99" y="42" width="28" height="4" rx="1.5" fill="#8a847c"/>
+  <rect x="99" y="51" width="33" height="4" rx="1.5" fill="#8a847c"/>
+  <rect x="99" y="60" width="20" height="4" rx="1.5" fill="#8a847c"/>
+  <rect x="99" y="74" width="14" height="3" rx="1.5" fill="#6b4f3a"/>
+  <text x="126" y="130" font-size="8.5" text-anchor="middle" fill="#888" font-family="monospace">tageslicht</text>
+
+  <!-- farbe -->
+  <rect x="174" y="4" width="72" height="110" rx="8" fill="#100818"/>
+  <rect x="183" y="28" width="36" height="7" rx="2" fill="#f5a800"/>
+  <rect x="183" y="42" width="28" height="4" rx="1.5" fill="#8a6020"/>
+  <rect x="183" y="51" width="33" height="4" rx="1.5" fill="#8a6020"/>
+  <rect x="183" y="60" width="20" height="4" rx="1.5" fill="#8a6020"/>
+  <rect x="183" y="74" width="14" height="3" rx="1.5" fill="#b040f8"/>
+  <text x="210" y="130" font-size="8.5" text-anchor="middle" fill="#888" font-family="monospace">farbe</text>
+
+  <!-- nebel -->
+  <rect x="258" y="4" width="72" height="110" rx="8" fill="#101828"/>
+  <rect x="267" y="28" width="36" height="7" rx="2" fill="#90c0e8"/>
+  <rect x="267" y="42" width="28" height="4" rx="1.5" fill="#4870a0"/>
+  <rect x="267" y="51" width="33" height="4" rx="1.5" fill="#4870a0"/>
+  <rect x="267" y="60" width="20" height="4" rx="1.5" fill="#4870a0"/>
+  <rect x="267" y="74" width="14" height="3" rx="1.5" fill="#5090f0"/>
+  <text x="294" y="130" font-size="8.5" text-anchor="middle" fill="#888" font-family="monospace">nebel</text>
+
+  <!-- sand -->
+  <rect x="342" y="4" width="72" height="110" rx="8" fill="#201808"/>
+  <rect x="351" y="28" width="36" height="7" rx="2" fill="#e8c860"/>
+  <rect x="351" y="42" width="28" height="4" rx="1.5" fill="#907040"/>
+  <rect x="351" y="51" width="33" height="4" rx="1.5" fill="#907040"/>
+  <rect x="351" y="60" width="20" height="4" rx="1.5" fill="#907040"/>
+  <rect x="351" y="74" width="14" height="3" rx="1.5" fill="#f0a020"/>
+  <text x="378" y="130" font-size="8.5" text-anchor="middle" fill="#888" font-family="monospace">sand</text>
+
+  <!-- wald -->
+  <rect x="426" y="4" width="72" height="110" rx="8" fill="#080f0a"/>
+  <rect x="435" y="28" width="36" height="7" rx="2" fill="#8a9e6a"/>
+  <rect x="435" y="42" width="28" height="4" rx="1.5" fill="#4a6040"/>
+  <rect x="435" y="51" width="33" height="4" rx="1.5" fill="#4a6040"/>
+  <rect x="435" y="60" width="20" height="4" rx="1.5" fill="#4a6040"/>
+  <rect x="435" y="74" width="14" height="3" rx="1.5" fill="#6a8c3a"/>
+  <text x="462" y="130" font-size="8.5" text-anchor="middle" fill="#888" font-family="monospace">wald</text>
+
+  <!-- rost -->
+  <rect x="510" y="4" width="72" height="110" rx="8" fill="#201008"/>
+  <rect x="519" y="28" width="36" height="7" rx="2" fill="#e89060"/>
+  <rect x="519" y="42" width="28" height="4" rx="1.5" fill="#905040"/>
+  <rect x="519" y="51" width="33" height="4" rx="1.5" fill="#905040"/>
+  <rect x="519" y="60" width="20" height="4" rx="1.5" fill="#905040"/>
+  <rect x="519" y="74" width="14" height="3" rx="1.5" fill="#f04820"/>
+  <text x="546" y="130" font-size="8.5" text-anchor="middle" fill="#888" font-family="monospace">rost</text>
+
+  <!-- grau -->
+  <rect x="594" y="4" width="72" height="110" rx="8" fill="#0e1014"/>
+  <rect x="603" y="28" width="36" height="7" rx="2" fill="#6878a0"/>
+  <rect x="603" y="42" width="28" height="4" rx="1.5" fill="#383e50"/>
+  <rect x="603" y="51" width="33" height="4" rx="1.5" fill="#383e50"/>
+  <rect x="603" y="60" width="20" height="4" rx="1.5" fill="#383e50"/>
+  <rect x="603" y="74" width="14" height="3" rx="1.5" fill="#5060a0"/>
+  <text x="630" y="130" font-size="8.5" text-anchor="middle" fill="#888" font-family="monospace">grau</text>
+
+  <!-- bunt -->
+  <rect x="678" y="4" width="72" height="110" rx="8" fill="#141210"/>
+  <rect x="687" y="28" width="36" height="7" rx="2" fill="#907860"/>
+  <rect x="687" y="42" width="28" height="4" rx="1.5" fill="#504540"/>
+  <rect x="687" y="51" width="33" height="4" rx="1.5" fill="#504540"/>
+  <rect x="687" y="60" width="20" height="4" rx="1.5" fill="#504540"/>
+  <rect x="687" y="74" width="14" height="3" rx="1.5" fill="#706050"/>
+  <text x="714" y="130" font-size="8.5" text-anchor="middle" fill="#888" font-family="monospace">bunt</text>
+
+  <!-- karpaten -->
+  <rect x="762" y="4" width="72" height="110" rx="8" fill="#282a36"/>
+  <rect x="771" y="28" width="36" height="7" rx="2" fill="#f8f8f2"/>
+  <rect x="771" y="42" width="28" height="4" rx="1.5" fill="#6272a4"/>
+  <rect x="771" y="51" width="33" height="4" rx="1.5" fill="#6272a4"/>
+  <rect x="771" y="60" width="20" height="4" rx="1.5" fill="#6272a4"/>
+  <rect x="771" y="74" width="14" height="3" rx="1.5" fill="#bd93f9"/>
+  <text x="798" y="130" font-size="8.5" text-anchor="middle" fill="#888" font-family="monospace">karpaten</text>
+
+</svg>

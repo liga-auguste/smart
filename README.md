@@ -12,6 +12,8 @@ A minimal personal knowledge base. No spaced repetition, no review system — ju
 
 ---
 
+![themes](static/themes-preview.svg)
+
 ## What it does
 
 - Write cards with a headline and body
