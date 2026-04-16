@@ -25,7 +25,7 @@ services:
     runtime: python
     schedule: "0 3 * * *"
     buildCommand: pip install -r requirements.txt
-    startCommand: python manage.py create_demo_data
+    startCommand: SECRET_KEY=placeholder python manage.py create_demo_data
     envVarGroups:
       - smart-shared
     envVars:
