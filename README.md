@@ -20,6 +20,7 @@ A minimal personal knowledge base. No spaced repetition, no review system — ju
 - Full-text search
 - 10 themes
 - PWA — installable on mobile, supports iOS Share Sheet
+- Export any card as a wallpaper image (1080×2340, matches your current theme)
 
 ## Stack
 

@@ -99,9 +99,15 @@
     {% endif %}
   {% endif %}
 </div>
+{% if not alle %}
+<button type="button" id="wallpaper-btn" class="wallpaper-btn">↓</button>
+{% endif %}
 {% endblock %}
 
 {% block scripts %}
 {% load static %}
 <script src="{% static 'js/cards.js' %}"></script>
+{% if not alle %}
+<script src="{% static 'js/wallpaper.js' %}"></script>
+{% endif %}
 {% endblock %}

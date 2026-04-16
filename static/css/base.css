@@ -331,6 +331,31 @@ body {
   pointer-events: auto;
 }
 
+.wallpaper-btn {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  color: var(--fg-muted);
+  font-size: 1.6rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, color 0.15s;
+  z-index: 10;
+}
+
+.single-view.nav-visible .wallpaper-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.wallpaper-btn:hover {
+  color: var(--fg);
+}
+
 
 .single-view .card {
   height: 100dvh;
