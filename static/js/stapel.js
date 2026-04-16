@@ -192,6 +192,10 @@ if (newName && newSave) {
         row.className = 'stapel-row';
         row.dataset.name = data.name;
 
+        const handle = document.createElement('span');
+        handle.className = 'stapel-row-handle';
+        handle.textContent = '⠿';
+
         const a = document.createElement('a');
         a.className = 'stapel-row-name';
         a.href = `/cards/?alle&stapel=${encodeURIComponent(data.name)}`;
@@ -213,7 +217,7 @@ if (newName && newSave) {
         deleteBtn.setAttribute('aria-label', 'löschen');
         deleteBtn.textContent = '×';
 
-        row.append(a, count, editBtn, deleteBtn);
+        row.append(handle, a, count, editBtn, deleteBtn);
         newRow.insertAdjacentElement('beforebegin', row);
         initRow(row);
         newName.value = '';
