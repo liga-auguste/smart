@@ -333,14 +333,14 @@ body {
 
 .wallpaper-btn {
   position: fixed;
-  bottom: 1.5rem;
+  bottom: calc(1rem + env(safe-area-inset-bottom));
   right: 1.5rem;
   background: none;
   border: none;
   color: var(--fg-muted);
-  font-size: 1.6rem;
   cursor: pointer;
-  padding: 0.5rem;
+  font-size: 1rem;
+  padding: 0 0.5rem;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s, color 0.15s;
@@ -546,13 +546,15 @@ body {
 .theme-label {
   position: fixed;
   bottom: calc(1rem + env(safe-area-inset-bottom));
-  right: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 0.75rem;
   color: var(--fg-muted);
   opacity: 0;
   transition: opacity 0.3s;
   pointer-events: none;
   z-index: 50;
+  white-space: nowrap;
 }
 
 .theme-label.visible {
