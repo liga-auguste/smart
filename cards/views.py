@@ -1,4 +1,5 @@
 import json
+from django.db.models import Max
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -16,7 +17,8 @@ def compose(request):
         content = (headline + '\n' + body) if body else headline
 
         if content:
-            Card.objects.create(user=request.user, content=content, stapel=stapel)
+            next_order = (Card.objects.filter(user=request.user).aggregate(Max('order'))['order__max'] or -1) + 1
+            Card.objects.create(user=request.user, content=content, stapel=stapel, order=next_order)
             if stapel:
                 Stapel.objects.get_or_create(user=request.user, name=stapel)
 
@@ -109,10 +111,12 @@ def reorder_cards(request):
         return JsonResponse({'error': 'invalid json'}, status=400)
 
     cards = {c.id: c for c in Card.objects.filter(user=request.user, id__in=ids)}
+    to_update = []
     for i, card_id in enumerate(ids):
         if card_id in cards:
             cards[card_id].order = i
-            cards[card_id].save(update_fields=['order'])
+            to_update.append(cards[card_id])
+    Card.objects.bulk_update(to_update, ['order'])
 
     return JsonResponse({'ok': True})
 
