@@ -116,6 +116,9 @@ if (isSingleView) {
     entries.forEach(e => {
       e.target.classList.toggle('in-view', e.isIntersecting);
       if (e.isIntersecting) {
+        if (e.target.classList.contains('card--end')) {
+          document.body.classList.add('nav-visible');
+        }
         localStorage.setItem('lastCard', e.target.id);
         currentStapel = e.target.dataset.stapel || '';
         if (navPrevBtn) navPrevBtn.hidden = !e.target.previousElementSibling;
@@ -133,6 +136,8 @@ if (isSingleView) {
             }
           }
         }
+      } else if (e.target.classList.contains('card--end')) {
+        document.body.classList.remove('nav-visible');
       }
     });
   }, { threshold: 0.5 });
