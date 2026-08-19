@@ -356,6 +356,43 @@ body {
   color: var(--fg);
 }
 
+.card-nav-btn {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--fg-muted);
+  cursor: pointer;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, color 0.15s;
+  z-index: 10;
+}
+
+.single-view.nav-visible .card-nav-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.card-nav-btn:hover {
+  color: var(--fg);
+}
+
+.card-nav-btn--prev {
+  left: 0.5rem;
+}
+
+.card-nav-btn--next {
+  right: 0.5rem;
+}
+
+.card-nav-btn[hidden] {
+  display: none;
+}
+
 
 .single-view .card {
   height: 100dvh;
@@ -587,7 +624,7 @@ body {
   flex: 1;
   overflow-x: scroll;
   overflow-y: hidden;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: x proximity;
   scrollbar-width: none;
 }
 
@@ -1011,6 +1048,11 @@ body {
 
 .card-end-back:hover {
   color: var(--fg);
+}
+
+.card-end-new {
+  margin-top: 0.75rem;
+  text-decoration: none;
 }
 
 /* === EMPTY STATE === */

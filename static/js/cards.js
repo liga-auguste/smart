@@ -97,9 +97,20 @@ if (isSingleView) {
 
   const stapelLabel = document.getElementById('stapel-label');
   const isZufaellig = !!document.querySelector('.card-list[data-zufaellig]');
+  const navPrevBtn = document.getElementById('card-nav-prev');
+  const navNextBtn = document.getElementById('card-nav-next');
   let stapelLabelTimer = null;
   let lastSeenStapel = null;
   let currentStapel = '';
+
+  function goToCard(direction) {
+    const list = document.querySelector('.card-list');
+    list.scrollBy({ left: direction * window.innerWidth, behavior: 'smooth' });
+  }
+  window.goToCard = goToCard;
+
+  navPrevBtn?.addEventListener('click', () => goToCard(-1));
+  navNextBtn?.addEventListener('click', () => goToCard(1));
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
@@ -107,6 +118,7 @@ if (isSingleView) {
       if (e.isIntersecting) {
         localStorage.setItem('lastCard', e.target.id);
         currentStapel = e.target.dataset.stapel || '';
+        if (navPrevBtn) navPrevBtn.hidden = !e.target.previousElementSibling;
         if (!isZufaellig && stapelLabel) {
           const s = currentStapel;
           if (s !== lastSeenStapel) {
@@ -563,11 +575,21 @@ if (isSingleView) {
   const list = document.querySelector('.card-list');
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-      list.scrollBy({ left: window.innerWidth, behavior: 'smooth' });
+      goToCard(1);
     } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      list.scrollBy({ left: -window.innerWidth, behavior: 'smooth' });
+      goToCard(-1);
     }
   });
+
+  let wheelCooldown = false;
+  list.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+    e.preventDefault();
+    if (wheelCooldown) return;
+    wheelCooldown = true;
+    goToCard(e.deltaY > 0 ? 1 : -1);
+    setTimeout(() => { wheelCooldown = false; }, 400);
+  }, { passive: false });
 }
 
 // === SUCHE ===
