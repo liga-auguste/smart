@@ -208,6 +208,30 @@ class CardListTest(TestCase):
         self.assertTrue(all(c.user == self.user for c in cards))
 
 
+@override_settings(STORAGES=SIMPLE_STORAGES)
+class CardNavArrowsTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='test', password='test')
+        self.client.login(username='test', password='test')
+        Card.objects.create(user=self.user, content='A')
+        Card.objects.create(user=self.user, content='B')
+
+    def test_single_view_renders_nav_arrows(self):
+        response = self.client.get(reverse('list'))
+        self.assertContains(response, 'id="card-nav-prev"')
+        self.assertContains(response, 'id="card-nav-next"')
+
+    def test_list_view_no_nav_arrows(self):
+        response = self.client.get(reverse('list'), {'alle': ''})
+        self.assertNotContains(response, 'id="card-nav-prev"')
+        self.assertNotContains(response, 'id="card-nav-next"')
+
+    def test_single_view_zufaellig_renders_nav_arrows(self):
+        response = self.client.get(reverse('list'), {'zufaellig': '1'})
+        self.assertContains(response, 'id="card-nav-prev"')
+        self.assertContains(response, 'id="card-nav-next"')
+
+
 class LinkifyTest(TestCase):
     def test_url_becomes_link(self):
         result = linkify('check https://example.com out')

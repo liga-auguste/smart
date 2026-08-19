@@ -155,6 +155,7 @@ smart/
 - [x] Root-URL `/` leitet zu `/cards/` weiter (kein versehentliches Landen auf Compose)
 - [x] Stapel — eigenes Modell + `CharField` auf `Card`, Zuordnung in Compose (Chips, Autocomplete, Hidden Input), Inline-Editor auf Karten, Sort-Modus gruppiert nach Stapel mit Drag zwischen Gruppen, Stapel-View (`/stapel/`) mit Umbenennen + Löschen (Confirm), Stapel-Chip in Nav (Einzelansicht, filtert auf Tap, × zum Zurücksetzen)
 - [x] Zufällige Karte (`/cards/?zufaellig=1`) — zufällige Reihenfolge via `order('?')`, im ⋯-Menü erreichbar
+- [x] Pfeil-Navigation in Single View (`‹`/`›`, sichtbar mit restlichem Chrome) als browserunabhängiger Fallback; zusätzlich `wheel`-Listener für zuverlässiges Trackpad-Scrollen in Chrome Desktop
 - [x] README — Live-Link, Stack, Screenshot, Philosophie
 - [x] Tests — Login required, Karte erstellen/löschen, Listen-Isolation zwischen Usern
 
