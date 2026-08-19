@@ -586,15 +586,13 @@ if (isSingleView) {
     }
   });
 
-  let wheelCooldown = false;
-  list.addEventListener('wheel', (e) => {
-    if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
-    e.preventDefault();
-    if (wheelCooldown) return;
-    wheelCooldown = true;
-    goToCard(e.deltaY > 0 ? 1 : -1);
-    setTimeout(() => { wheelCooldown = false; }, 400);
-  }, { passive: false });
+  // Trackpad/Mausrad-Scrollen auf dem Desktop unterbindet nur noch die
+  // native Bewegung, statt sie selbst zu übersetzen — das führte über
+  // verschiedene Browser hinweg zu unzuverlässigem Snap-Verhalten (Chrome:
+  // undershoot, Safari: mehrere Karten auf einmal bei langen Listen).
+  // Navigation läuft stattdessen ausschließlich über Klick-Zonen und
+  // Tastatur. 'wheel' feuert nicht bei Touch-Swipe, Mobile ist unberührt.
+  list.addEventListener('wheel', (e) => { e.preventDefault(); }, { passive: false });
 }
 
 // === SUCHE ===

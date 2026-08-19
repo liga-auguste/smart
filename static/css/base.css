@@ -356,37 +356,50 @@ body {
   color: var(--fg);
 }
 
+/* Volle Höhe, ~1/8 Viewportbreite als verlässliche Klick-/Tippfläche —
+   Bewegen soll auch ohne den Pfeil zu treffen möglich sein. Der Pfeil
+   selbst ist nur die visuelle Andeutung (Hover auf Desktop, oder wenn die
+   restliche Chrome-Leiste ohnehin sichtbar ist). */
 .card-nav-btn {
   position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0;
+  bottom: 0;
+  width: 12.5vw;
+  min-width: 2.5rem;
+  display: flex;
+  align-items: center;
   background: none;
   border: none;
   color: var(--fg-muted);
-  cursor: pointer;
   font-size: 1.5rem;
-  padding: 0.5rem;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s, color 0.15s;
+  cursor: pointer;
   z-index: 10;
 }
 
-.single-view.nav-visible .card-nav-btn {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.card-nav-btn:hover {
-  color: var(--fg);
-}
-
 .card-nav-btn--prev {
-  left: 0.5rem;
+  left: 0;
+  justify-content: flex-start;
+  padding-left: 0.5rem;
 }
 
 .card-nav-btn--next {
-  right: 0.5rem;
+  right: 0;
+  justify-content: flex-end;
+  padding-right: 0.5rem;
+}
+
+.card-nav-glyph {
+  opacity: 0;
+  transition: opacity 0.3s, color 0.15s;
+}
+
+.single-view.nav-visible .card-nav-glyph,
+.card-nav-btn:hover .card-nav-glyph {
+  opacity: 1;
+}
+
+.card-nav-btn:hover .card-nav-glyph {
+  color: var(--fg);
 }
 
 .card-nav-btn[hidden] {
