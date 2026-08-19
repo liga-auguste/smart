@@ -624,7 +624,7 @@ body {
   flex: 1;
   overflow-x: scroll;
   overflow-y: hidden;
-  scroll-snap-type: x proximity;
+  scroll-snap-type: x mandatory;
   scrollbar-width: none;
 }
 
