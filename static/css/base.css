@@ -1050,6 +1050,11 @@ body {
   color: var(--fg);
 }
 
+.card-end-new {
+  margin-top: 0.75rem;
+  text-decoration: none;
+}
+
 /* === EMPTY STATE === */
 
 .empty-state {
