@@ -17,6 +17,15 @@
       <div class="login-error">falsch.</div>
     {% endif %}
   </form>
-  <p class="login-hint">zugangsdaten vergessen? schreib mir.</p>
+  <p class="login-hint">zugangsdaten vergessen? <a id="login-mail" data-user="dev" data-domain="ligaauguste.de">schreib mir.</a></p>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Address is assembled client-side so it never appears in the HTML
+  // source, which keeps it away from scrapers that don't run JS.
+  const mail = document.getElementById('login-mail');
+  mail.href = 'mailto:' + mail.dataset.user + '@' + mail.dataset.domain;
+</script>
 {% endblock %}

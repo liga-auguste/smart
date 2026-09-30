@@ -1382,6 +1382,15 @@ a.nav-menu-item {
   color: var(--fg-muted);
 }
 
+.login-hint a {
+  color: inherit;
+  text-underline-offset: 0.2em;
+}
+
+.login-hint a:hover {
+  color: var(--fg);
+}
+
 /* === ONBOARDING === */
 
 .onboarding-overlay {
