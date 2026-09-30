@@ -373,7 +373,9 @@ body {
   color: var(--fg-muted);
   font-size: 1.5rem;
   cursor: pointer;
-  z-index: 10;
+  /* Unter Nav und Wallpaper-Button (beide z-index 10): die Zonen reichen
+     über die volle Höhe und würden sonst deren Klicks abfangen. */
+  z-index: 5;
 }
 
 .card-nav-btn--prev {
