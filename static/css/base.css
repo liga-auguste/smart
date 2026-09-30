@@ -1376,6 +1376,12 @@ a.nav-menu-item {
   color: var(--fg-muted);
 }
 
+.login-hint {
+  margin-top: 2rem;
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+}
+
 /* === ONBOARDING === */
 
 .onboarding-overlay {
